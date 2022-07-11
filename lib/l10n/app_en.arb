@@ -1,0 +1,122 @@
+{
+    "language" : "English",
+    "@language":{
+        "description" : "The current Language"
+    },
+    "term" : "Term :",
+    "@term":{
+        "description" : "Indicate the Term text field"
+    },
+    "synonyms" : "Synonym(s) :",
+    "@synonyms":{
+        "description" : "Indicate the synonyms text field"
+    },
+    "equivalents" : "Foreign equivalent(s) :",
+    "@equivalents":{
+        "description" : "Indicate the equivalents text field"
+    },
+    "capital" : "Capital :",
+    "@capital":{
+        "description" : "Indicate the capital text field"
+    },
+    "headquarters" : "Headquarters :",
+    "@headquarters":{
+        "description" : "Indicate the headquarters text field"
+    },
+    "antonyms" : "Antonym(s) :",
+    "@antonym":{
+        "description" : "Indicate the antonym text field"
+    },
+    "toponym" : "Toponym :",
+    "@toponym":{
+        "description" : "Indicate the toponym text field"
+    },
+    "field" : "Field(s) :",
+    "@field":{
+        "description" : "Indicate the field text field"
+    },
+    "notes" : "Notes :",
+    "@notes":{
+        "description" : "Indicate the notes text field"
+    },
+    "definition":"Definition :",
+    "@definition":{
+        "description" : "Indicate the definition text field"
+    },
+    "seeAlso" : "See also :",
+    "@seeAlso":{
+        "description" : "Indicate the see also articles"
+    },
+    "about" : "About",
+    "@about":{
+        "description" : "Indicate the about text field"
+    },
+    "aboutText" : "This application is a proposal to reuse the dataset \"base-franceterme-terms-scientific-and-technical\" in order to have a mobile version of the France Terme website. It was coded on the free time of a computer science student, it is possible that it contains bugs, in this case do not hesitate to contact me to make me raise them.",
+    "@aboutText":{
+        "description" : "Indicate the about text"
+    },
+    "legalDisclaimer" : "Legal Disclaimer",
+    "@legalDisclaimer":{
+        "description" : "Indicate the legalDisclaimer field"
+    },
+    "legalDisclaimerText" : "The data used by the application are under open license Etalab, they come from \"Délégation générale à la langue française et aux langues de France (DGLFLF)\". As for the application, it is under an MIT open license.",
+    "@legalDisclaimerText":{
+        "description" : "Indicate the legalDisclaimer text"
+    },
+    "author" : "Author",
+    "@author":{
+        "description" : "Indicate the author field"
+    },
+    "news" : "News",
+    "@news":{
+        "description" : "Indicate the news field"
+    },
+    "discover" : "Discover",
+    "@discover":{
+        "description" : "Indicate the discover field"
+    },
+    "information" : "Informations",
+    "@information":{
+        "description" : "Information page name"
+    },
+    "settings" : "Settings",
+    "@settings":{
+        "description" : "Settings page name"
+    },
+    "updateQuestion" : "Do you want to update the data?",
+    "@updateQuestion":{
+        "description" : "Update question"
+    },
+    "updateYes" : "Yes",
+    "@updateYes":{
+        "description" : "Update Yes"
+    },
+    "updateNo" : "No",
+    "@updateNo":{
+        "description" : "Update No"
+    },
+    "searchUpdate" : "Search for updates...",
+    "@searchUpdate":{
+        "description" : "Update information"
+    },
+    "launchInformation" : "This is the first launch of the application...\n Initializing the database may take some time...\n",
+    "@launchInformation":{
+        "description" : "Launch information"
+    },
+    "updateInformation" : "Update of the database...\nThis processing can take time...\n",
+    "@updateInformation":{
+        "description" : "Update information"
+    },
+    "errorMessage": "An unexpected error occurred...\nTry to restart the application",
+    "@errorMessage":{
+        "description" : "Error message"
+    },
+    "copyInformation":"The url has been copied into the clipboard",
+    "@copyInformation":{
+        "description" : "Information when copy button is clicked"
+    },
+    "searchField":"Research",
+    "@searchField":{
+        "description" : "Research text field"
+    }
+}
