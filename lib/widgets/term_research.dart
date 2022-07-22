@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:france_terme/providers/data_provider.dart';
+import 'package:france_termes/providers/data_provider.dart';
 import 'package:diacritic/diacritic.dart' as diacritic;
 import '../models/article.dart';
 import '../models/term.dart';
@@ -8,8 +8,7 @@ import 'article_preview/article_preview.dart';
 class TermResearch extends SearchDelegate {
   DataProvider provider;
   TermResearch(this.provider);
-  List<Term>? terms;
-  Widget? widgetSuggestions;
+  Widget? _widgetSuggestions;
 
   @override
   String get searchFieldLabel => "...";
@@ -43,17 +42,17 @@ class TermResearch extends SearchDelegate {
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             List<Article> articles = snapshot.requireData as List<Article>;
-            widgetSuggestions = ListView.builder(
+            _widgetSuggestions = ListView.builder(
               itemCount: articles.length,
               itemBuilder: (BuildContext context, int index) {
                 return ArticlePreview(articles[index], provider);
               },
             );
-            return widgetSuggestions!;
+            return _widgetSuggestions!;
           } else if (snapshot.hasError) {
             return const Text("Error...");
           } else {
-            return widgetSuggestions ?? const CircularProgressIndicator();
+            return _widgetSuggestions ?? const CircularProgressIndicator();
           }
         }));
   }
@@ -67,7 +66,7 @@ class TermResearch extends SearchDelegate {
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             List<Term> terms = snapshot.requireData as List<Term>;
-            widgetSuggestions = ListView.builder(
+            _widgetSuggestions = ListView.builder(
               itemCount: terms.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
@@ -79,11 +78,11 @@ class TermResearch extends SearchDelegate {
                 );
               },
             );
-            return widgetSuggestions!;
+            return _widgetSuggestions!;
           } else if (snapshot.hasError) {
             return const Text("Error...");
           } else {
-            return widgetSuggestions ?? const CircularProgressIndicator();
+            return _widgetSuggestions ?? const CircularProgressIndicator();
           }
         }));
   }

@@ -12,8 +12,8 @@
     "definition":"Définition :",
     "seeAlso" : "Voir aussi :",
     "about" : "À propos",
-    "aboutText" : "Cette application est une proposition de réutilisation du jeu de données « base-franceterme-termes-scientifiques-et-techniques » dans le but d’avoir une version mobile du site France Terme.Elle a été codée sur le temps libre d’un étudiant d’informatique, il est possible qu’elle contienne des bogues, dans ce cas n’hésiter pas à me contacter pour me les faire remonter.",
-    "legalDisclaimer" : "Mentions légale",
+    "aboutText" : "Cette application est une proposition de réutilisation du jeu de données « base-franceterme-termes-scientifiques-et-techniques » dans le but d’avoir une version mobile du site France Terme. Elle a été codée sur le temps libre d’un étudiant d’informatique, il est possible qu’elle contienne des bogues, dans ce cas n’hésiter pas à me contacter pour me les faire remonter.",
+    "legalDisclaimer" : "Mentions légales",
     "legalDisclaimerText" : "Les données utilisées par l’application sont sous licence ouverte Etalab, elles proviennent de « Délégation générale à la langue française et aux langues de France (DGLFLF) ». Quant à l’application, elle est sous licence libre MIT.",
     "author" : "Auteur",
     "news" : "Nouveautés",
@@ -27,6 +27,10 @@
     "launchInformation" : "Il s'agit du premier lancement de l'application...\nL'initialisation de la base de données peut prendre quelque temps\n",
     "updateInformation" : "Mise à jour de la base de données...\nCe traitement peut prendre du temps...\n",
     "errorMessage": "Une erreur inattendue est survenue...\n Essayez de relancer l'application\n",
-    "copyInformation":"L'url a été copié dans le press-papier",
-    "searchField":"Recherche"
+    "copyInformation":"L'URL a été copiée dans le presse-papiers",
+    "searchField":"Recherche",
+    "sourceCode":"Code source",
+    "dataset":"Jeu de données",
+    "website":"Site officiel",
+    "mailInformation":"L'adresse e-mail a été copiée dans le presse-papiers"
 }

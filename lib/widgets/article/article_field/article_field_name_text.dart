@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 
 class ArticleFieldNameText extends StatelessWidget {
   final String fieldName;
@@ -7,7 +8,7 @@ class ArticleFieldNameText extends StatelessWidget {
   Widget build(BuildContext context) {
     return RichText(
       text: TextSpan(
-        style: const TextStyle(fontSize: 15),
+        style: const TextStyle(fontSize: ThemeConstants.textSizeInformation),
         text: fieldName,
       ),
     );

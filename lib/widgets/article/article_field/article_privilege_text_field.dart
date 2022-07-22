@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:france_terme/models/term.dart';
-import 'package:france_terme/widgets/themes/theme_constants.dart';
+import 'package:france_termes/models/term.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 
 class ArticlePrivilegeTermTextField extends StatelessWidget {
   final Term term;

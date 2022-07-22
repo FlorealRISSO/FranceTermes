@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:france_terme/widgets/themes/theme_constants.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 import '../../../models/term.dart';
 
 class ArticleEquivalentTextField extends StatelessWidget {
@@ -13,7 +13,8 @@ class ArticleEquivalentTextField extends StatelessWidget {
       text: TextSpan(
         text: equivalent.word,
         style: TextStyle(
-            color: ThemeConstants.actionsColor(context), fontSize: 20),
+            color: ThemeConstants.actionsColor(context),
+            fontSize: ThemeConstants.textSizeDefault),
       ),
     );
   }

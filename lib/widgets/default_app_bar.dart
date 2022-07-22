@@ -12,10 +12,10 @@ class DefaultAppBar {
     return AppBar(
         leading: leading,
         actions: actions,
+        centerTitle: true,
         title: title,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: true,
         systemOverlayStyle: Theme.of(context).brightness == Brightness.light
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light);

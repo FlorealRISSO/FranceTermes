@@ -1,4 +1,4 @@
-import 'package:france_terme/models/term.dart';
+import 'package:france_termes/models/term.dart';
 import "package:isar/isar.dart";
 part 'article.g.dart';
 
@@ -40,4 +40,12 @@ class Article {
     domains : $domains
     ''';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Article && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id;
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:core';
+import 'dart:io';
 
 /// `ServerApi`is a static class for get the last version of the data.
 class ServerApi {
@@ -24,6 +25,15 @@ class ServerApi {
     final String strDate = _parseDate(jsonFile);
     final DateTime dateTime = DateTime.parse(strDate);
     return dateTime;
+  }
+
+  static Future<bool> hasNetwork() async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
+    }
   }
 
   /// Return the xml File

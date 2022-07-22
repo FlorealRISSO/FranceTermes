@@ -30,3 +30,6 @@ doc/api/
 #Apple macOS
 **/.DS_Store
 ./.DS_Store
+
+#Keystore
+./android/key.properties

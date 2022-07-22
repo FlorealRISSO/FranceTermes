@@ -1,8 +1,8 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/material.dart';
-import 'package:france_terme/providers/data_provider.dart';
-import 'package:france_terme/widgets/search_bar.dart';
-import 'package:france_terme/widgets/themes/theme_constants.dart';
+import 'package:france_termes/providers/data_provider.dart';
+import 'package:france_termes/widgets/search_bar.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 import '../models/article.dart';
 import 'article_preview/article_preview.dart';
 import 'endless_listview.dart';
@@ -19,24 +19,24 @@ class SlidingSegmentedHome extends StatefulWidget {
 
 class _SlidingSegmentedHomeState extends State<SlidingSegmentedHome> {
   static const int _newArticle = 20;
-  late final DataProvider provider;
+  late final DataProvider _provider;
   late final List<Widget> _sides;
   late Widget _selectedSide;
   @override
   void initState() {
     super.initState();
-    provider = widget.provider;
+    _provider = widget.provider;
     _sides = [
-      futureNews(_newArticle),
-      _buildRightTest(),
+      _futureNews(_newArticle),
+      _buildDiscover(),
     ];
     _selectedSide = _sides[0];
     setState(() {});
   }
 
-  Widget futureNews(int number) {
+  Widget _futureNews(int number) {
     return FutureBuilder(
-        future: provider.getNewArticles(number),
+        future: _provider.getNewArticles(number),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<Article> articles = snapshot.requireData as List<Article>;
@@ -50,13 +50,13 @@ class _SlidingSegmentedHomeState extends State<SlidingSegmentedHome> {
   Widget _buildNews(List<Article> articles) {
     List<Widget> children = [];
     for (Article article in articles) {
-      children.add(ArticlePreview(article, provider));
+      children.add(ArticlePreview(article, _provider));
     }
     return ListView(children: children);
   }
 
-  Widget _buildRightTest() {
-    return EndlessListview(provider);
+  Widget _buildDiscover() {
+    return EndlessListview(_provider);
   }
 
   @override
@@ -65,7 +65,7 @@ class _SlidingSegmentedHomeState extends State<SlidingSegmentedHome> {
       children: [
         Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: SearchBar(provider)),
+            child: SearchBar(_provider)),
         Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: CustomSlidingSegmentedControl<int>(

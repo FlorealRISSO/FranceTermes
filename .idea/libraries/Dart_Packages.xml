@@ -233,6 +233,13 @@
             </list>
           </value>
         </entry>
+        <entry key="flutter_localizations">
+          <value>
+            <list>
+              <option value="/usr/local/Caskroom/flutter/3.0.2/flutter/packages/flutter_localizations/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="flutter_platform_widgets">
           <value>
             <list>
@@ -341,7 +348,7 @@
         <entry key="json_annotation">
           <value>
             <list>
-              <option value="/usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.5.0/lib" />
+              <option value="/usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.6.0/lib" />
             </list>
           </value>
         </entry>
@@ -411,7 +418,7 @@
         <entry key="path_provider_android">
           <value>
             <list>
-              <option value="/usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.15/lib" />
+              <option value="/usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.16/lib" />
             </list>
           </value>
         </entry>
@@ -523,7 +530,7 @@
         <entry key="share_plus">
           <value>
             <list>
-              <option value="/usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus-4.0.9/lib" />
+              <option value="/usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus-4.0.10/lib" />
             </list>
           </value>
         </entry>
@@ -656,7 +663,7 @@
         <entry key="sqflite">
           <value>
             <list>
-              <option value="/usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.2+1/lib" />
+              <option value="/usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.3/lib" />
             </list>
           </value>
         </entry>
@@ -904,7 +911,7 @@
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/isar_flutter_libs-2.5.0/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/isar_generator-2.5.0/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.4/lib" />
-      <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.5.0/lib" />
+      <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.6.0/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/lints-2.0.0/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/logging-1.0.2/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib" />
@@ -914,7 +921,7 @@
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/package_config-2.1.0/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.1/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.11/lib" />
-      <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.15/lib" />
+      <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.16/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_ios-2.0.10/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.7/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-2.0.6/lib" />
@@ -930,7 +937,7 @@
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/pubspec_parse-1.2.0/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-3.1.0/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/rxdart-0.27.4/lib" />
-      <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus-4.0.9/lib" />
+      <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus-4.0.10/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus_linux-3.0.0/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus_macos-3.0.1/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus_platform_interface-3.0.3/lib" />
@@ -948,7 +955,7 @@
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/shelf_web_socket-1.0.2/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/source_gen-1.2.2/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.2/lib" />
-      <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.2+1/lib" />
+      <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.3/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite_common-2.2.1+1/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0/lib" />
@@ -979,6 +986,7 @@
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/.pub-cache/hosted/pub.dartlang.org/yaml-3.1.1/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/bin/cache/pkg/sky_engine/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/packages/flutter/lib" />
+      <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/packages/flutter_localizations/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/packages/flutter_test/lib" />
       <root url="file:///usr/local/Caskroom/flutter/3.0.2/flutter/packages/flutter_web_plugins/lib" />
     </CLASSES>

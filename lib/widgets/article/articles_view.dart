@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:france_terme/models/article.dart';
-import 'package:france_terme/models/statut.dart';
-import 'package:france_terme/models/term.dart';
-import 'package:france_terme/widgets/article/article_field/article_simple_text_field.dart';
-import 'package:france_terme/widgets/article/article_field/article_standard_term_text_field.dart';
+import 'package:france_termes/models/article.dart';
+import 'package:france_termes/models/statut.dart';
+import 'package:france_termes/models/term.dart';
+import 'package:france_termes/widgets/article/article_field/article_simple_text_field.dart';
+import 'package:france_termes/widgets/article/article_field/article_standard_term_text_field.dart';
 import 'package:collection/collection.dart';
 import '../article_preview/article_field/article_domain_text_field.dart';
 import '../themes/theme_constants.dart';
@@ -22,7 +22,7 @@ class ArticleView extends StatelessWidget {
   final Article article;
   const ArticleView(this.article, {Key? key}) : super(key: key);
 
-  Widget buildTextCard(BuildContext context, Widget text) {
+  Widget _buildTextCard(BuildContext context, Widget text) {
     return ListTile(
       title: Card(
         semanticContainer: true,
@@ -37,10 +37,10 @@ class ArticleView extends StatelessWidget {
     );
   }
 
-  void addField(BuildContext context, String fieldName, Widget text,
+  void _addField(BuildContext context, String fieldName, Widget text,
       List<Widget> children) {
     children.add(Text(fieldName));
-    children.add(buildTextCard(context, text));
+    children.add(_buildTextCard(context, text));
   }
 
   /// To understand read `statut.dart`
@@ -78,11 +78,11 @@ class ArticleView extends StatelessWidget {
       BuildContext context, Term? term, List<Widget> children) {
     if (term != null) {
       String fieldName = Statut.fromIntToLang(context, term.statut);
-      addField(
+      _addField(
           context, fieldName, ArticlePrivilegeTermTextField(term), children);
 
       for (final pair in IterableZip([term.variantTypes, term.variantWords])) {
-        addField(
+        _addField(
             context,
             pair[0],
             ArticleSimpleTextField(
@@ -96,7 +96,7 @@ class ArticleView extends StatelessWidget {
   void addListField(BuildContext context, String fieldName, List<Term> terms,
       List<Widget> children) {
     if (terms.isNotEmpty) {
-      addField(
+      _addField(
           context, fieldName, ArticleStandardTermTextField(terms), children);
     }
   }
@@ -116,17 +116,17 @@ class ArticleView extends StatelessWidget {
     addListField(context, Statut.frSynonyme, synonyms, children);
     addListField(context, Statut.frAntonyme, antonyms, children);
     if (article.domains.isNotEmpty) {
-      addField(context, AppLocalizations.of(context)!.field,
+      _addField(context, AppLocalizations.of(context)!.field,
           ArticleDomainTextField(article.domains), children);
     }
     if (article.definition.isNotEmpty) {
-      addField(context, AppLocalizations.of(context)!.definition,
+      _addField(context, AppLocalizations.of(context)!.definition,
           ArticleSimpleTextField(article.definition), children);
     }
     addListField(context, AppLocalizations.of(context)!.equivalents,
         equivalents, children);
     if (article.notes.isNotEmpty) {
-      addField(context, AppLocalizations.of(context)!.notes,
+      _addField(context, AppLocalizations.of(context)!.notes,
           ArticleSimpleTextField(article.notes), children);
     }
 

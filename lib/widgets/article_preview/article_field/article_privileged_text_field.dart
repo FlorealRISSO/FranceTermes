@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:france_terme/widgets/themes/theme_constants.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 
 import '../../../models/term.dart';
 
@@ -9,7 +9,7 @@ class ArticlePrivilegedTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextStyle principalStyle = TextStyle(
-      fontSize: 20,
+      fontSize: ThemeConstants.textSizeDefault,
       fontWeight: FontWeight.bold,
       color: ThemeConstants.actionsColor(context),
     );

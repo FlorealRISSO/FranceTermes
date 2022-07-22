@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:france_terme/models/term.dart';
+import 'package:france_termes/models/term.dart';
 
 import '../../themes/theme_constants.dart';
 

@@ -3,11 +3,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:france_terme/providers/data_provider.dart';
-import 'package:france_terme/widgets/article_preview/article_preview.dart';
-import 'package:france_terme/widgets/article/articles_view.dart';
-import 'package:france_terme/widgets/default_app_bar.dart';
-import 'package:france_terme/widgets/themes/theme_constants.dart';
+import 'package:france_termes/providers/data_provider.dart';
+import 'package:france_termes/widgets/article_preview/article_preview.dart';
+import 'package:france_termes/widgets/article/articles_view.dart';
+import 'package:france_termes/widgets/default_app_bar.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,7 +46,7 @@ class ArticlePage extends StatelessWidget {
         (error, stackTrace) => Future<String>.error(error!, stackTrace));
   }
 
-  void toImage() {
+  void _toImage() {
     Future<String> path = _saveImage();
     path.then((String path) {
       Share.shareFiles([path]);
@@ -56,12 +56,12 @@ class ArticlePage extends StatelessWidget {
   Widget _shareButton(BuildContext context, GlobalKey key) {
     return IconButton(
       icon: const Icon(Icons.image),
-      onPressed: toImage,
+      onPressed: _toImage,
       color: ThemeConstants.actionsColor(context),
     );
   }
 
-  Widget buildFuturePreview() {
+  Widget _buildFuturePreview() {
     return FutureBuilder(
       future: provider.getArticles(article.toSeeId),
       builder: (context, snapshot) {
@@ -92,7 +92,7 @@ class ArticlePage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
           child: Text(AppLocalizations.of(context)!.seeAlso)));
     }
-    children.add(buildFuturePreview());
+    children.add(_buildFuturePreview());
 
     return Scaffold(
         appBar: DefaultAppBar(

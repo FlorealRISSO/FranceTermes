@@ -15,19 +15,20 @@ extension GetArticleCollection on Isar {
 const ArticleSchema = CollectionSchema(
   name: 'Article',
   schema:
-      '{"name":"Article","idName":"id","properties":[{"name":"date","type":"Long"},{"name":"definition","type":"String"},{"name":"domains","type":"StringList"},{"name":"getUrl","type":"String"},{"name":"notes","type":"String"},{"name":"numero","type":"String"},{"name":"source","type":"String"},{"name":"toQuestion","type":"String"},{"name":"toSeeId","type":"LongList"},{"name":"warning","type":"String"}],"indexes":[],"links":[]}',
+      '{"name":"Article","idName":"id","properties":[{"name":"date","type":"Long"},{"name":"definition","type":"String"},{"name":"domains","type":"StringList"},{"name":"getUrl","type":"String"},{"name":"hashCode","type":"Long"},{"name":"notes","type":"String"},{"name":"numero","type":"String"},{"name":"source","type":"String"},{"name":"toQuestion","type":"String"},{"name":"toSeeId","type":"LongList"},{"name":"warning","type":"String"}],"indexes":[],"links":[]}',
   idName: 'id',
   propertyIds: {
     'date': 0,
     'definition': 1,
     'domains': 2,
     'getUrl': 3,
-    'notes': 4,
-    'numero': 5,
-    'source': 6,
-    'toQuestion': 7,
-    'toSeeId': 8,
-    'warning': 9
+    'hashCode': 4,
+    'notes': 5,
+    'numero': 6,
+    'source': 7,
+    'toQuestion': 8,
+    'toSeeId': 9,
+    'warning': 10
   },
   listProperties: {'domains', 'toSeeId'},
   indexIds: {},
@@ -83,23 +84,25 @@ void _articleSerializeNative(
   final value3 = object.getUrl;
   final _getUrl = IsarBinaryWriter.utf8Encoder.convert(value3);
   dynamicSize += (_getUrl.length) as int;
-  final value4 = object.notes;
-  final _notes = IsarBinaryWriter.utf8Encoder.convert(value4);
+  final value4 = object.hashCode;
+  final _hashCode = value4;
+  final value5 = object.notes;
+  final _notes = IsarBinaryWriter.utf8Encoder.convert(value5);
   dynamicSize += (_notes.length) as int;
-  final value5 = object.numero;
-  final _numero = IsarBinaryWriter.utf8Encoder.convert(value5);
+  final value6 = object.numero;
+  final _numero = IsarBinaryWriter.utf8Encoder.convert(value6);
   dynamicSize += (_numero.length) as int;
-  final value6 = object.source;
-  final _source = IsarBinaryWriter.utf8Encoder.convert(value6);
+  final value7 = object.source;
+  final _source = IsarBinaryWriter.utf8Encoder.convert(value7);
   dynamicSize += (_source.length) as int;
-  final value7 = object.toQuestion;
-  final _toQuestion = IsarBinaryWriter.utf8Encoder.convert(value7);
+  final value8 = object.toQuestion;
+  final _toQuestion = IsarBinaryWriter.utf8Encoder.convert(value8);
   dynamicSize += (_toQuestion.length) as int;
-  final value8 = object.toSeeId;
-  dynamicSize += (value8.length) * 8;
-  final _toSeeId = value8;
-  final value9 = object.warning;
-  final _warning = IsarBinaryWriter.utf8Encoder.convert(value9);
+  final value9 = object.toSeeId;
+  dynamicSize += (value9.length) * 8;
+  final _toSeeId = value9;
+  final value10 = object.warning;
+  final _warning = IsarBinaryWriter.utf8Encoder.convert(value10);
   dynamicSize += (_warning.length) as int;
   final size = staticSize + dynamicSize;
 
@@ -111,27 +114,28 @@ void _articleSerializeNative(
   writer.writeBytes(offsets[1], _definition);
   writer.writeStringList(offsets[2], _domains);
   writer.writeBytes(offsets[3], _getUrl);
-  writer.writeBytes(offsets[4], _notes);
-  writer.writeBytes(offsets[5], _numero);
-  writer.writeBytes(offsets[6], _source);
-  writer.writeBytes(offsets[7], _toQuestion);
-  writer.writeLongList(offsets[8], _toSeeId);
-  writer.writeBytes(offsets[9], _warning);
+  writer.writeLong(offsets[4], _hashCode);
+  writer.writeBytes(offsets[5], _notes);
+  writer.writeBytes(offsets[6], _numero);
+  writer.writeBytes(offsets[7], _source);
+  writer.writeBytes(offsets[8], _toQuestion);
+  writer.writeLongList(offsets[9], _toSeeId);
+  writer.writeBytes(offsets[10], _warning);
 }
 
 Article _articleDeserializeNative(IsarCollection<Article> collection, int id,
     IsarBinaryReader reader, List<int> offsets) {
   final object = Article(
     id,
-    reader.readString(offsets[5]),
+    reader.readString(offsets[6]),
     reader.readDateTime(offsets[0]),
     reader.readString(offsets[1]),
     reader.readStringList(offsets[2]) ?? [],
-    reader.readLongList(offsets[8]) ?? [],
-    reader.readString(offsets[4]),
-    reader.readString(offsets[6]),
-    reader.readString(offsets[9]),
+    reader.readLongList(offsets[9]) ?? [],
+    reader.readString(offsets[5]),
     reader.readString(offsets[7]),
+    reader.readString(offsets[10]),
+    reader.readString(offsets[8]),
   );
   _articleAttachLinks(collection, id, object);
   return object;
@@ -151,7 +155,7 @@ P _articleDeserializePropNative<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
@@ -159,8 +163,10 @@ P _articleDeserializePropNative<P>(
     case 7:
       return (reader.readString(offset)) as P;
     case 8:
-      return (reader.readLongList(offset) ?? []) as P;
+      return (reader.readString(offset)) as P;
     case 9:
+      return (reader.readLongList(offset) ?? []) as P;
+    case 10:
       return (reader.readString(offset)) as P;
     default:
       throw 'Illegal propertyIndex';
@@ -175,6 +181,7 @@ dynamic _articleSerializeWeb(
   IsarNative.jsObjectSet(jsObj, 'definition', object.definition);
   IsarNative.jsObjectSet(jsObj, 'domains', object.domains);
   IsarNative.jsObjectSet(jsObj, 'getUrl', object.getUrl);
+  IsarNative.jsObjectSet(jsObj, 'hashCode', object.hashCode);
   IsarNative.jsObjectSet(jsObj, 'id', object.id);
   IsarNative.jsObjectSet(jsObj, 'notes', object.notes);
   IsarNative.jsObjectSet(jsObj, 'numero', object.numero);
@@ -236,6 +243,9 @@ P _articleDeserializePropWeb<P>(Object jsObj, String propertyName) {
           []) as P;
     case 'getUrl':
       return (IsarNative.jsObjectGet(jsObj, 'getUrl') ?? '') as P;
+    case 'hashCode':
+      return (IsarNative.jsObjectGet(jsObj, 'hashCode') ??
+          double.negativeInfinity) as P;
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity)
           as P;
@@ -681,6 +691,54 @@ extension ArticleQueryFilter
       property: 'getUrl',
       value: pattern,
       caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> hashCodeEqualTo(
+      int value) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'hashCode',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'hashCode',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'hashCode',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'hashCode',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
     ));
   }
 
@@ -1332,6 +1390,14 @@ extension ArticleQueryWhereSortBy on QueryBuilder<Article, Article, QSortBy> {
     return addSortByInternal('getUrl', Sort.desc);
   }
 
+  QueryBuilder<Article, Article, QAfterSortBy> sortByHashCode() {
+    return addSortByInternal('hashCode', Sort.asc);
+  }
+
+  QueryBuilder<Article, Article, QAfterSortBy> sortByHashCodeDesc() {
+    return addSortByInternal('hashCode', Sort.desc);
+  }
+
   QueryBuilder<Article, Article, QAfterSortBy> sortById() {
     return addSortByInternal('id', Sort.asc);
   }
@@ -1407,6 +1473,14 @@ extension ArticleQueryWhereSortThenBy
     return addSortByInternal('getUrl', Sort.desc);
   }
 
+  QueryBuilder<Article, Article, QAfterSortBy> thenByHashCode() {
+    return addSortByInternal('hashCode', Sort.asc);
+  }
+
+  QueryBuilder<Article, Article, QAfterSortBy> thenByHashCodeDesc() {
+    return addSortByInternal('hashCode', Sort.desc);
+  }
+
   QueryBuilder<Article, Article, QAfterSortBy> thenById() {
     return addSortByInternal('id', Sort.asc);
   }
@@ -1472,6 +1546,10 @@ extension ArticleQueryWhereDistinct
     return addDistinctByInternal('getUrl', caseSensitive: caseSensitive);
   }
 
+  QueryBuilder<Article, Article, QDistinct> distinctByHashCode() {
+    return addDistinctByInternal('hashCode');
+  }
+
   QueryBuilder<Article, Article, QDistinct> distinctById() {
     return addDistinctByInternal('id');
   }
@@ -1518,6 +1596,10 @@ extension ArticleQueryProperty
 
   QueryBuilder<Article, String, QQueryOperations> getUrlProperty() {
     return addPropertyNameInternal('getUrl');
+  }
+
+  QueryBuilder<Article, int, QQueryOperations> hashCodeProperty() {
+    return addPropertyNameInternal('hashCode');
   }
 
   QueryBuilder<Article, int, QQueryOperations> idProperty() {

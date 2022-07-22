@@ -254,7 +254,7 @@ class TermeParser {
         final Article article = parseArticle(xmlArticle);
         articles.add(article);
       } catch (e) {
-        print(e);
+        continue;
       }
     }
     return articles;

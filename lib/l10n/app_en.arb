@@ -118,5 +118,22 @@
     "searchField":"Research",
     "@searchField":{
         "description" : "Research text field"
+    },
+    "sourceCode":"Source code",
+    "@sourceCode":{
+        "description" : "the source code button"
+    },
+    "dataset":"Dataset",
+    "@dataset":{
+        "description" : "the dataset button"
+    },
+    "website":"Official website",
+    "@website":{
+        "description" : "the website button"
+    },
+    "mailInformation":"The email address has been copied to the clipboard",
+    "@mail":{
+        "description" : "Information when copy button is clicked"
     }
+
 }

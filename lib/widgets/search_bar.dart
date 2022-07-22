@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:france_terme/providers/data_provider.dart';
-import 'package:france_terme/widgets/term_research.dart';
-import 'package:france_terme/widgets/themes/theme_constants.dart';
+import 'package:france_termes/providers/data_provider.dart';
+import 'package:france_termes/widgets/term_research.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchBar extends StatelessWidget {
@@ -11,7 +11,7 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String _label = AppLocalizations.of(context)!.searchField;
+    final String label = AppLocalizations.of(context)!.searchField;
     return GestureDetector(
         onTap: () =>
             showSearch(context: context, delegate: TermResearch(provider)),
@@ -22,18 +22,16 @@ class SearchBar extends StatelessWidget {
             readOnly: true,
             decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search),
-                hintText: _label,
+                hintText: label,
                 filled: true,
+                fillColor: ThemeConstants.itemDefaultColor(context),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                       width: 0,
                       color: ThemeConstants.itemDefaultColor(context)),
                   borderRadius: ThemeConstants.itemDefaultBorderRaduis(),
                 ),
-                //fillColor: Theme.of(context).brightness == Brightness.light
-                //  ? const Color(0xFFF0F0F0)
-                //  : const Color(0xFF3A3A3A),
-                labelText: _label),
+                labelText: label),
           ),
         ));
   }

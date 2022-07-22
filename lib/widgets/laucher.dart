@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:france_terme/widgets/sliding_segmented_home.dart';
+import 'package:france_termes/widgets/sliding_segmented_home.dart';
 import 'package:isar/isar.dart';
 import 'package:tuple/tuple.dart';
 import '../providers/data_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+Widget unexpectedError(BuildContext context) {
+  return Center(child: Text(AppLocalizations.of(context)!.errorMessage));
+}
 
 class Launcher extends StatefulWidget {
   final DataProvider provider;
@@ -24,9 +28,9 @@ class _LauncherState extends State<Launcher> {
     provider = widget.provider;
   }
 
-  Future<Tuple2<bool, DateTime>> isUpdateNeeded() async {
+  Future<Tuple2<bool, DateTime>> _isUpdateNeeded() async {
     final Tuple2<bool, DateTime> dateInformations =
-        await DataProvider.isUpToDate();
+        await DataProvider.isUpToDateLazy();
     bool updateNeeded = false;
     if (!dateInformations.item1) {
       await showDialog(
@@ -54,9 +58,9 @@ class _LauncherState extends State<Launcher> {
     return Tuple2(updateNeeded, dateInformations.item2);
   }
 
-  Widget futureVerification() {
+  Widget _futureVerification() {
     return FutureBuilder(
-        future: isUpdateNeeded(),
+        future: _isUpdateNeeded(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             final Tuple2<bool, DateTime> dateInformations =
@@ -81,7 +85,7 @@ class _LauncherState extends State<Launcher> {
 
   @override
   Widget build(BuildContext context) {
-    return futureVerification();
+    return _futureVerification();
   }
 }
 
@@ -103,7 +107,7 @@ class FutureInit extends StatelessWidget {
           if (snapshot.hasData) {
             return SlidingSegmentedHome(provider);
           } else if (snapshot.hasData) {
-            return const Text("Init error...");
+            return unexpectedError(context);
           } else {
             return Center(
               child: Column(children: [
@@ -135,7 +139,7 @@ class FutureUpdate extends StatelessWidget {
           if (snapshot.hasData) {
             return SlidingSegmentedHome(provider);
           } else if (snapshot.hasData) {
-            return const Text("Update error...");
+            return unexpectedError(context);
           } else {
             return Center(
               child: Column(children: [
@@ -143,30 +147,6 @@ class FutureUpdate extends StatelessWidget {
                 const CircularProgressIndicator(),
               ]),
             );
-          }
-        }));
-  }
-}
-
-class FutureDataProvider extends StatelessWidget {
-  const FutureDataProvider({Key? key}) : super(key: key);
-  Future<DataProvider> getProvider() async {
-    Isar isar = await DataProvider.openIsar();
-    return DataProvider(isar);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: getProvider(),
-        builder: ((context, snapshot) {
-          if (snapshot.hasData) {
-            DataProvider provider = snapshot.requireData as DataProvider;
-            return Launcher(provider);
-          } else if (snapshot.hasError) {
-            return Text(AppLocalizations.of(context)!.errorMessage);
-          } else {
-            return const CircularProgressIndicator();
           }
         }));
   }

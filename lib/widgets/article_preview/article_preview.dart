@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:france_terme/models/article.dart';
-import 'package:france_terme/models/statut.dart';
-import 'package:france_terme/providers/data_provider.dart';
-import 'package:france_terme/widgets/page/article_page.dart';
+import 'package:france_termes/models/article.dart';
+import 'package:france_termes/models/statut.dart';
+import 'package:france_termes/providers/data_provider.dart';
+import 'package:france_termes/widgets/page/article_page.dart';
 import '../../models/term.dart';
 import '../themes/theme_constants.dart';
 import 'article_field/article_domain_text_field.dart';

@@ -2,28 +2,30 @@ import 'package:flutter/material.dart';
 
 class LightConstants {
   static const Color itemDefaultColor = Color(0xFFF0F0F0);
-  static const Color articlePreviewColor = Color(0xFFF0F0F0);
-  static const Color slindingSegmentSelectedColor = Color(0xFFD3D3D3);
+  static const Color articlePreviewColor = itemDefaultColor;
+  static const Color slindingSegmentSelectedColor = Color(0xFFD0D0D0);
   static const Color articleInternalCardColor = Color(0xFFFFFFFF);
   static const Color actionsColor = Color(0xFF000000);
 }
 
 class DarkConstants {
   static const Color itemDefaultColor = Color(0xFF3A3A3A);
-  static const Color articlePreviewColor = Color(0xFF3A3A3A);
+  static const Color articlePreviewColor = itemDefaultColor;
   static const Color slindingSegmentSelectedColor = Color(0xFF707070);
   static const Color articleInternalCardColor = Color(0xFF303030);
   static const Color actionsColor = Color(0xFFFFFFFF);
 }
 
 class ThemeConstants {
+  static const double textSizeDefault = 20;
+  static const double textSizeInformation = 15;
   static const TextStyle textStyleDefault = TextStyle(
-    fontSize: 20,
+    fontSize: textSizeDefault,
   );
 
   static TextStyle coloredTextStyleDefault(BuildContext context) {
     return TextStyle(
-      fontSize: 20,
+      fontSize: textSizeDefault,
       color: Theme.of(context).brightness == Brightness.light
           ? LightConstants.actionsColor
           : DarkConstants.actionsColor,

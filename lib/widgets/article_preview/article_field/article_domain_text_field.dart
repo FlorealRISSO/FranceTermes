@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:france_terme/widgets/themes/theme_constants.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 
 class ArticleDomainTextField extends StatelessWidget {
   final List<String> domains;
@@ -12,7 +12,7 @@ class ArticleDomainTextField extends StatelessWidget {
       text: TextSpan(
           text: first,
           style: TextStyle(
-              fontSize: 20,
+              fontSize: ThemeConstants.textSizeDefault,
               fontWeight: FontWeight.normal,
               color: ThemeConstants.actionsColor(context))),
     );

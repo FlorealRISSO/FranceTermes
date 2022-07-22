@@ -1,4 +1,4 @@
-package com.example.france_terme
+package fr.flris.france_termes
 
 import io.flutter.embedding.android.FlutterActivity
 
