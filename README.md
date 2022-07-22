@@ -4,8 +4,8 @@
 
 ## Téléchargement
 
-- TODO IOS ![Icone IOS](./ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-40%403x.png)
-- TODO ANDROID ![Icone ANDROID](./android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png)
+- [Iphone/Ipad](https://apps.apple.com/app/id1635325942)
+- Android - En cours
 
 ## Qu'est-ce que France Terme
 
