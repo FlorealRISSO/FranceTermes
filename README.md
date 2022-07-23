@@ -5,7 +5,7 @@
 ## Téléchargement
 
 - [Iphone/Ipad](https://apps.apple.com/app/id1635325942)
-- Android - En cours
+- [Android](https://play.google.com/store/apps/details?id=fr.flris.france_termes)
 
 ## Qu'est-ce que France Terme
 
