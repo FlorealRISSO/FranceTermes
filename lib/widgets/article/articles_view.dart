@@ -101,6 +101,12 @@ class ArticleView extends StatelessWidget {
     }
   }
 
+  void sortTerms(final List<List<Term>> listOfList) {
+    for (final list in listOfList) {
+      list.sort((term1, term2) => term1.word.compareTo(term2.word));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Tuple4Terms terms = Tuple4Terms();
@@ -108,6 +114,8 @@ class ArticleView extends StatelessWidget {
     final List<Term> antonyms = [];
     final List<Term> equivalents = [];
     buildFields(terms, synonyms, antonyms, equivalents);
+    sortTerms([synonyms, antonyms, equivalents]);
+
     List<Widget> children = [];
     addPriviligieField(context, terms.privilegie, children);
     addPriviligieField(context, terms.toponyme, children);
