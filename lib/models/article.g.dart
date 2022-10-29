@@ -81,18 +81,17 @@ const ArticleSchema = CollectionSchema(
   indexes: {},
   links: {
     r'terms': LinkSchema(
-      id: -5634372111824860705,
+      id: -2138466325202770231,
       name: r'terms',
       target: r'Term',
       single: false,
-      linkName: r'article',
     )
   },
   embeddedSchemas: {},
   getId: _articleGetId,
   getLinks: _articleGetLinks,
   attach: _articleAttach,
-  version: '3.0.2',
+  version: '3.0.0',
 );
 
 int _articleEstimateSize(
@@ -202,6 +201,7 @@ List<IsarLinkBase<dynamic>> _articleGetLinks(Article object) {
 }
 
 void _articleAttach(IsarCollection<dynamic> col, Id id, Article object) {
+  object.id = id;
   object.terms.attach(col, col.isar.collection<Term>(), r'terms', id);
 }
 

@@ -66,17 +66,18 @@ const TermSchema = CollectionSchema(
   indexes: {},
   links: {
     r'article': LinkSchema(
-      id: 2030748433031392163,
+      id: 4007157657065834676,
       name: r'article',
       target: r'Article',
       single: true,
+      linkName: r'terms',
     )
   },
   embeddedSchemas: {},
   getId: _termGetId,
   getLinks: _termGetLinks,
   attach: _termAttach,
-  version: '3.0.2',
+  version: '3.0.0',
 );
 
 int _termEstimateSize(
@@ -136,6 +137,7 @@ Term _termDeserialize(
     reader.readString(offsets[2]),
     langage: reader.readStringOrNull(offsets[1]) ?? "fr",
   );
+  object.id = id;
   return object;
 }
 
@@ -176,6 +178,7 @@ List<IsarLinkBase<dynamic>> _termGetLinks(Term object) {
 }
 
 void _termAttach(IsarCollection<dynamic> col, Id id, Term object) {
+  object.id = id;
   object.article.attach(col, col.isar.collection<Article>(), r'article', id);
 }
 

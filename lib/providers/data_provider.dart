@@ -72,7 +72,7 @@ class DataProvider {
   }
 
   static Future<Isar> openIsar() async {
-    Isar isar = await Isar.open([ArticleSchema, TermSchema],
+    Isar isar = Isar.openSync([ArticleSchema, TermSchema],
         directory: (await getApplicationDocumentsDirectory()).path,
         inspector: true);
     return isar;
@@ -85,8 +85,9 @@ class DataProvider {
   /// To ensure the safety this fonction
   /// should be use instead of `_feed()`
   Future<bool> update(List<Article> articles) async {
-    await _clear();
-    await _feed(articles);
+    _clear();
+    _feed(articles);
+
     return true;
   }
 
@@ -156,8 +157,7 @@ class DataProvider {
   }
 
   Future<List<Article>> getArticles(List<int> index) async {
-    List<Article?> possibleArticles =
-        await isar.txn(() => isar.articles.getAll(index));
+    List<Article?> possibleArticles = await isar.articles.getAll(index);
     List<Article> articles = [];
     for (Article? article in possibleArticles) {
       if (article != null) {
@@ -168,12 +168,12 @@ class DataProvider {
     return articles;
   }
 
-  Future<void> _feed(List<Article> articles) async {
-    await isar.writeTxn(() => isar.articles.putAll(articles));
+  void _feed(List<Article> articles) {
+    isar.writeTxnSync(() => isar.articles.putAllSync(articles));
   }
 
-  Future<void> _clear() async {
-    isar.writeTxn(() async => isar.clear());
+  void _clear() {
+    isar.writeTxnSync(() => isar.clearSync());
   }
 
   Future<void> updateFromDownload(DateTime lastVersion) async {

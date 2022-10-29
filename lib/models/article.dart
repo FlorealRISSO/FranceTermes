@@ -8,7 +8,7 @@ class Article {
   static const baseUrl = "http://www.culture.fr/franceterme/terme/";
 
   // Metadata :
-  final Id id; // Needed
+  Id id; // Needed
   final String numero; // Needed
   final DateTime date;
   final List<int> toSeeId;
@@ -17,7 +17,6 @@ class Article {
   final String warning;
   final String toQuestion;
   // Terms :
-  @Backlink(to: 'article')
   final IsarLinks<Term> terms = IsarLinks<Term>();
   // Domains :
   final List<String> domains;
