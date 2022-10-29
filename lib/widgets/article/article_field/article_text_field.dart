@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../themes/theme_constants.dart';
 
-class ArticleSimpleTextField extends StatelessWidget {
+class ArticleTextField extends StatelessWidget {
   final String text;
-  const ArticleSimpleTextField(this.text, {Key? key}) : super(key: key);
+  const ArticleTextField(this.text, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

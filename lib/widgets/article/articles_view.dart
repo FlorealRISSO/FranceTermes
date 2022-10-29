@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:france_termes/models/article.dart';
 import 'package:france_termes/models/statut.dart';
 import 'package:france_termes/models/term.dart';
-import 'package:france_termes/widgets/article/article_field/article_simple_text_field.dart';
-import 'package:france_termes/widgets/article/article_field/article_standard_term_text_field.dart';
+import 'package:france_termes/widgets/article/article_field/article_text_card.dart';
 import 'package:collection/collection.dart';
-import './article_field/article_domain_text_field.dart';
 import '../themes/theme_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'article_field/article_privilege_text_field.dart';
+import 'article_field/article_field_name_text.dart';
 
 class Tuple4Terms {
   Term? privilegie;
@@ -21,27 +19,6 @@ class Tuple4Terms {
 class ArticleView extends StatelessWidget {
   final Article article;
   const ArticleView(this.article, {Key? key}) : super(key: key);
-
-  Widget _buildTextCard(BuildContext context, Widget text) {
-    return ListTile(
-      title: Card(
-        semanticContainer: true,
-        color: ThemeConstants.articleInternalCardColor(context),
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: ThemeConstants.itemDefaultBorderRaduis(),
-        ),
-        child: Padding(padding: const EdgeInsets.all(4), child: text),
-      ),
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
-
-  void _addField(BuildContext context, String fieldName, Widget text,
-      List<Widget> children) {
-    children.add(Text(fieldName));
-    children.add(_buildTextCard(context, text));
-  }
 
   /// To understand read `statut.dart`
   void buildFields(Tuple4Terms terms, List<Term> synonyms, List<Term> antonyms,
@@ -74,32 +51,78 @@ class ArticleView extends StatelessWidget {
     }
   }
 
-  void addPriviligieField(
-      BuildContext context, Term? term, List<Widget> children) {
+  void addField(String fieldName, String fieldContent, List<Widget> fieldList) {
+    fieldList.add(ArticleFieldNameText(fieldName));
+    fieldList.add(ArticleTextCard(fieldContent));
+  }
+
+  String buildPriviligieString(Term term) {
+    return term.word;
+  }
+
+  String buildFrenchVariantString(List<Term> terms) {
+    StringBuffer buffer = StringBuffer();
+    int i = 0;
+    for (final term in terms) {
+      buffer.write(term.word);
+      buffer.write(term.variantWords.join(', '));
+      if (i != terms.length - 1) {
+        buffer.write(" - ");
+      }
+    }
+    return buffer.toString();
+  }
+
+  String buildEquivalentString(List<Term> terms) {
+    StringBuffer buffer = StringBuffer();
+    int i = 0;
+    for (final term in terms) {
+      buffer.write(term.word);
+      if (term.variantWords.isNotEmpty) {
+        buffer.write(" [");
+        buffer.write(term.variantWords.join(', '));
+        buffer.write("]");
+      }
+      buffer.write(" (${term.langage})");
+      if (i != terms.length - 1) {
+        buffer.write(" - ");
+      }
+      i += 1;
+    }
+    return buffer.toString();
+  }
+
+  String buildDomainString(List<String> domains) {
+    return domains.join(" - ").toUpperCase();
+  }
+
+  void addPriviligiesField(
+      BuildContext context, Term? term, List<Widget> fieldList) {
     if (term != null) {
       String fieldName = Statut.fromIntToLang(context, term.statut);
-      _addField(
-          context, fieldName, ArticlePrivilegeTermTextField(term), children);
-
-      for (final pair in IterableZip([term.variantTypes, term.variantWords])) {
-        _addField(
-            context,
-            pair[0],
-            ArticleSimpleTextField(
-              pair[1],
-            ),
-            children);
+      String fieldContent = buildPriviligieString(term);
+      addField(fieldName, fieldContent, fieldList);
+      for (final tuple in IterableZip([term.variantTypes, term.variantWords])) {
+        addField(tuple[0], tuple[1], fieldList);
       }
     }
   }
 
-  void addListField(BuildContext context, String fieldName, List<Term> terms,
-      List<Widget> children) {
-    if (terms.isNotEmpty) {
-      _addField(
-          context, fieldName, ArticleStandardTermTextField(terms), children);
-    }
-  }
+  // void addListField(BuildContext context, String fieldName, List<Term> terms,
+  //     List<Widget> children) {
+  //   if (terms.isNotEmpty) {
+  //     _addField(
+  //         context, fieldName, ArticleFrenchTermTextField(terms), children);
+  //   }
+  // }
+
+  // void addEquivalentListField(BuildContext context, String fieldName,
+  //     List<Term> terms, List<Widget> children) {
+  //   if (terms.isNotEmpty) {
+  //     _addField(
+  //         context, fieldName, ArticleEquivalentTermTextField(terms), children);
+  //   }
+  // }
 
   void sortTerms(final List<List<Term>> listOfList) {
     for (final list in listOfList) {
@@ -109,6 +132,7 @@ class ArticleView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     Tuple4Terms terms = Tuple4Terms();
     final List<Term> synonyms = [];
     final List<Term> antonyms = [];
@@ -116,28 +140,31 @@ class ArticleView extends StatelessWidget {
     buildFields(terms, synonyms, antonyms, equivalents);
     sortTerms([synonyms, antonyms, equivalents]);
 
-    List<Widget> children = [];
-    addPriviligieField(context, terms.privilegie, children);
-    addPriviligieField(context, terms.toponyme, children);
-    addPriviligieField(context, terms.capital, children);
-    addPriviligieField(context, terms.siege, children);
-    addListField(context, Statut.fromIntToLang(context, Statut.iSynonyme),
-        synonyms, children);
-    addListField(context, Statut.fromIntToLang(context, Statut.iAntonyme),
-        antonyms, children);
+    List<Widget> listField = [];
+
+    addPriviligiesField(context, terms.privilegie, listField);
+    addPriviligiesField(context, terms.toponyme, listField);
+    addPriviligiesField(context, terms.capital, listField);
+    addPriviligiesField(context, terms.siege, listField);
+
+    if (synonyms.isNotEmpty) {
+      addField(l10n.synonyms, buildFrenchVariantString(synonyms), listField);
+    }
+    if (antonyms.isNotEmpty) {
+      addField(l10n.antonyms, buildFrenchVariantString(antonyms), listField);
+    }
     if (article.domains.isNotEmpty) {
-      _addField(context, AppLocalizations.of(context)!.field,
-          ArticleDomainTextField(article.domains), children);
+      addField(l10n.field, buildDomainString(article.domains), listField);
+    }
+    if (equivalents.isNotEmpty) {
+      addField(l10n.equivalents, buildEquivalentString(equivalents), listField);
     }
     if (article.definition.isNotEmpty) {
-      _addField(context, AppLocalizations.of(context)!.definition,
-          ArticleSimpleTextField(article.definition), children);
+      addField(l10n.definition, article.definition, listField);
     }
-    addListField(context, AppLocalizations.of(context)!.equivalents,
-        equivalents, children);
+
     if (article.notes.isNotEmpty) {
-      _addField(context, AppLocalizations.of(context)!.notes,
-          ArticleSimpleTextField(article.notes), children);
+      addField(l10n.notes, article.notes, listField);
     }
 
     return ListTile(
@@ -150,7 +177,7 @@ class ArticleView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: children,
+                children: listField,
               ),
             )));
   }
