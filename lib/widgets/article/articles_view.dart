@@ -67,7 +67,7 @@ class ArticleView extends StatelessWidget {
         buffer.write("]");
       }
       if (i != terms.length - 1) {
-        buffer.write(" - ");
+        buffer.write(", ");
       }
     }
     return buffer.toString();
@@ -85,7 +85,7 @@ class ArticleView extends StatelessWidget {
       }
       buffer.write(" (${term.langage})");
       if (i != terms.length - 1) {
-        buffer.write(" - ");
+        buffer.write(", ");
       }
       i += 1;
     }
