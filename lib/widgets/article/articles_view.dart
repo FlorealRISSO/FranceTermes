@@ -5,7 +5,7 @@ import 'package:france_termes/models/term.dart';
 import 'package:france_termes/widgets/article/article_field/article_simple_text_field.dart';
 import 'package:france_termes/widgets/article/article_field/article_standard_term_text_field.dart';
 import 'package:collection/collection.dart';
-import '../article_preview/article_field/article_domain_text_field.dart';
+import './article_field/article_domain_text_field.dart';
 import '../themes/theme_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

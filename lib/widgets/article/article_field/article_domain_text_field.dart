@@ -10,7 +10,7 @@ class ArticleDomainTextField extends StatelessWidget {
     final TextStyle style = ThemeConstants.coloredTextStyleDefault(context);
     return SelectableText.rich(
       TextSpan(children: [
-        TextSpan(text: domains.join(", ").toUpperCase(), style: style),
+        TextSpan(text: domains.join(" - ").toUpperCase(), style: style),
       ]),
     );
   }
