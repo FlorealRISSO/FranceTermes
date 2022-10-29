@@ -105,7 +105,8 @@ class TermeParser {
   }
 
   TupleVariants parseTermVariants(XmlElement xmlTerm) {
-    final TupleVariants variants = Tuple2(<String>[], <String>[]);
+    final List<String> variantsTypes = [];
+    final List<String> variantsWords = [];
     for (final XmlElement xmlVariants
         in xmlTerm.findElements(XmlConstants.termVariantes)) {
       final String type =
@@ -116,10 +117,10 @@ class TermeParser {
           .first
           .text
           .replaceAll('\n', "");
-      variants.item1.add(type); // [type1,variant1,type2,variant2...]
-      variants.item2.add(variant);
+      variantsTypes.add(type); // [type1,variant1,type2,variant2...]
+      variantsWords.add(Term.deletePartOfSpeech(variant));
     }
-    return variants;
+    return TupleVariants(variantsTypes, variantsWords);
   }
 
   /// Sometime the XML file does not have the "Terme" in attribute
