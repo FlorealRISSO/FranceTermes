@@ -65,7 +65,11 @@ class ArticleView extends StatelessWidget {
     int i = 0;
     for (final term in terms) {
       buffer.write(term.word);
-      buffer.write(term.variantWords.join(', '));
+      if (term.variantWords.isNotEmpty) {
+        buffer.write(" [");
+        buffer.write(term.variantWords.join(', '));
+        buffer.write("]");
+      }
       if (i != terms.length - 1) {
         buffer.write(" - ");
       }
