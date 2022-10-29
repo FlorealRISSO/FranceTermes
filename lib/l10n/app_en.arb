@@ -51,7 +51,7 @@
     "@about":{
         "description" : "Indicate the about text field"
     },
-    "aboutText" : "This application is a proposal to reuse the dataset \"base-franceterme-terms-scientific-and-technical\" in order to have a mobile version of the France Terme website. It was coded on the free time of a computer science student, it is possible that it contains bugs, in this case do not hesitate to contact me to make me raise them.",
+    "aboutText" : "This application is a proposal to reuse the dataset \"base-franceterme-terms-scientific-and-technical\" in order to have a mobile version of the FranceTerme website. It was coded on the free time of a computer science student, it is possible that it contains bugs, in this case do not hesitate to contact me to make me raise them.",
     "@aboutText":{
         "description" : "Indicate the about text"
     },
@@ -134,6 +134,9 @@
     "mailInformation":"The email address has been copied to the clipboard",
     "@mail":{
         "description" : "Information when copy button is clicked"
+    },
+    "dateInformation" : "Official Journal of",
+    "@dateInformation" : {
+        "description": "the text that explains the date"
     }
-
 }

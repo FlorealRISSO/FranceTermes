@@ -84,14 +84,25 @@ class ArticlePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dateInformation = AppLocalizations.of(context)!.dateInformation;
+    final date = Align(
+        alignment: Alignment.centerRight,
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Text(
+              "$dateInformation ${article.date.day}/${article.date.month}/${article.date.year}",
+              textAlign: TextAlign.right,
+            )));
     List<Widget> children = [
       RepaintBoundary(key: _globalKey, child: ArticleView(article)),
+      date,
     ];
     if (article.toSeeId.isNotEmpty) {
       children.add(Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
           child: Text(AppLocalizations.of(context)!.seeAlso)));
     }
+
     children.add(_buildFuturePreview());
 
     return Scaffold(

@@ -8,7 +8,9 @@ class ArticleFieldNameText extends StatelessWidget {
   Widget build(BuildContext context) {
     return RichText(
       text: TextSpan(
-        style: const TextStyle(fontSize: ThemeConstants.textSizeInformation),
+        style: TextStyle(
+            color: ThemeConstants.actionsColor(context),
+            fontSize: ThemeConstants.textSizeInformation),
         text: fieldName,
       ),
     );

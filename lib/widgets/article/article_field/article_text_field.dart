@@ -9,7 +9,6 @@ class ArticleTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextStyle style = ThemeConstants.coloredTextStyleDefault(context);
-
     return SelectableText.rich(
       TextSpan(text: text, style: style),
     );
