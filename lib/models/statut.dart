@@ -56,7 +56,7 @@ class Statut {
     }
   }
 
-  static String fromInt(statut) {
+  static String fromInt(int statut) {
     switch (statut) {
       case iToponyme:
         return toponyme;

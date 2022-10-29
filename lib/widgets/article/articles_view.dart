@@ -121,8 +121,10 @@ class ArticleView extends StatelessWidget {
     addPriviligieField(context, terms.toponyme, children);
     addPriviligieField(context, terms.capital, children);
     addPriviligieField(context, terms.siege, children);
-    addListField(context, Statut.frSynonyme, synonyms, children);
-    addListField(context, Statut.frAntonyme, antonyms, children);
+    addListField(context, Statut.fromIntToLang(context, Statut.iSynonyme),
+        synonyms, children);
+    addListField(context, Statut.fromIntToLang(context, Statut.iAntonyme),
+        antonyms, children);
     if (article.domains.isNotEmpty) {
       _addField(context, AppLocalizations.of(context)!.field,
           ArticleDomainTextField(article.domains), children);

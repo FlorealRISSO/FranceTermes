@@ -35,7 +35,7 @@
     "@field":{
         "description" : "Indicate the field text field"
     },
-    "notes" : "Notes :",
+    "notes" : "Note(s) :",
     "@notes":{
         "description" : "Indicate the notes text field"
     },
