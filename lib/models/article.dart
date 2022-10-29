@@ -8,8 +8,7 @@ class Article {
   static const baseUrl = "http://www.culture.fr/franceterme/terme/";
 
   // Metadata :
-  @Id()
-  final int id; // Needed
+  final Id id; // Needed
   final String numero; // Needed
   final DateTime date;
   final List<int> toSeeId;

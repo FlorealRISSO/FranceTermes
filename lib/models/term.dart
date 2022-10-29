@@ -9,8 +9,7 @@ class Term {
   static final RegExp regExpFeminin = RegExp(r', -[a-zA-Z]+');
   static final RegExp regExpPartOfSpeech = RegExp(r', (([a-zA-Z])+\.)+');
   // Metadata :
-  @Id()
-  final int id = Isar.autoIncrement;
+  final Id id = Isar.autoIncrement;
   final IsarLink<Article> article = IsarLink<Article>();
   // Informations :
   final int statut;

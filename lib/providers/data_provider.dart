@@ -72,10 +72,9 @@ class DataProvider {
   }
 
   static Future<Isar> openIsar() async {
-    Isar isar = await Isar.open(
-        schemas: [ArticleSchema, TermSchema],
+    Isar isar = await Isar.open([ArticleSchema, TermSchema],
         directory: (await getApplicationDocumentsDirectory()).path,
-        inspector: false);
+        inspector: true);
     return isar;
   }
 
@@ -98,7 +97,7 @@ class DataProvider {
         .or()
         .wordStartsWith(query, caseSensitive: false)
         .or()
-        .variantWordsAnyStartsWith(query, caseSensitive: false)
+        .variantWordsElementStartsWith(query, caseSensitive: false)
         .findAll();
     return terms;
   }
@@ -110,7 +109,7 @@ class DataProvider {
         .or()
         .wordStartsWith(query, caseSensitive: false)
         .or()
-        .variantWordsAnyStartsWith(query, caseSensitive: false)
+        .variantWordsElementStartsWith(query, caseSensitive: false)
         .findAll();
     Set<Article> articles = {};
     for (final Term term in terms) {
@@ -158,7 +157,7 @@ class DataProvider {
 
   Future<List<Article>> getArticles(List<int> index) async {
     List<Article?> possibleArticles =
-        await isar.txn((isar) => isar.articles.getAll(index));
+        await isar.txn(() => isar.articles.getAll(index));
     List<Article> articles = [];
     for (Article? article in possibleArticles) {
       if (article != null) {
@@ -170,15 +169,11 @@ class DataProvider {
   }
 
   Future<void> _feed(List<Article> articles) async {
-    await isar.writeTxn((isar) => isar.articles.putAll(
-          articles,
-          replaceOnConflict: true,
-          saveLinks: true,
-        ));
+    await isar.writeTxn(() => isar.articles.putAll(articles));
   }
 
   Future<void> _clear() async {
-    isar.writeTxn((isar) => isar.clear());
+    isar.writeTxn(() async => isar.clear());
   }
 
   Future<void> updateFromDownload(DateTime lastVersion) async {
