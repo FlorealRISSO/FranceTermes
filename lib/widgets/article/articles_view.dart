@@ -56,10 +56,6 @@ class ArticleView extends StatelessWidget {
     fieldList.add(ArticleTextCard(fieldContent));
   }
 
-  String buildPriviligieString(Term term) {
-    return term.word;
-  }
-
   String buildFrenchVariantString(List<Term> terms) {
     StringBuffer buffer = StringBuffer();
     int i = 0;
@@ -104,10 +100,10 @@ class ArticleView extends StatelessWidget {
       BuildContext context, Term? term, List<Widget> fieldList) {
     if (term != null) {
       String fieldName = Statut.fromIntToLang(context, term.statut);
-      String fieldContent = buildPriviligieString(term);
+      String fieldContent = term.word;
       addField(fieldName, fieldContent, fieldList);
       for (final tuple in IterableZip([term.variantTypes, term.variantWords])) {
-        addField(tuple[0], tuple[1], fieldList);
+        addField("${tuple[0]} :", tuple[1], fieldList);
       }
     }
   }
