@@ -192,7 +192,8 @@ class TermeParser {
     throw [];
   }
 
-  List<String> parseDomaines(XmlElement xmlArticle, List<String> domains) {
+  List<String> parseDomaines(XmlElement xmlArticle) {
+    List<String> domains = [];
     for (final xmlDomaine
         in xmlArticle.findAllElements(XmlConstants.domainList)) {
       for (final xmlDom
@@ -204,7 +205,8 @@ class TermeParser {
     return domains;
   }
 
-  List<Term> parseAllTerms(XmlElement xmlArticle, List<Term> terms) {
+  List<Term> parseAllTerms(XmlElement xmlArticle) {
+    List<Term> terms = [];
     parseEquivalent(xmlArticle, terms);
     parseTerms(xmlArticle, terms);
     return terms;
@@ -225,11 +227,9 @@ class TermeParser {
     final String articleStringDate =
         xmlArticle.findElements(XmlConstants.articleDate).first.text;
     final DateTime articleDate = DateFormat('d/M/y').parse(articleStringDate);
-    final List<String> domains = [];
-    parseDomaines(xmlArticle, domains);
+    final List<String> domains = parseDomaines(xmlArticle);
     final Metadata articleMetadata = parseMetadata(xmlArticle);
-    final List<Term> terms = [];
-    parseAllTerms(xmlArticle, terms);
+    final List<Term> terms = parseAllTerms(xmlArticle);
     final String definition = parseDefinition(xmlArticle);
     final article = Article(
         articleId,
