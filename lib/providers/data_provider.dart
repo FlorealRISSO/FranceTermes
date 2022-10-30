@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:france_termes/models/article.dart';
+import 'package:france_termes/models/domain.dart';
 import 'package:france_termes/models/term.dart';
 import 'package:france_termes/parser/france_terme_parser.dart';
 import 'package:france_termes/providers/server_api.dart';
@@ -72,7 +73,7 @@ class DataProvider {
   }
 
   static Future<Isar> openIsar() async {
-    Isar isar = Isar.openSync([ArticleSchema, TermSchema],
+    Isar isar = Isar.openSync([ArticleSchema, TermSchema, DomainSchema],
         directory: (await getApplicationDocumentsDirectory()).path,
         inspector: true);
     return isar;
@@ -119,6 +120,7 @@ class DataProvider {
     }
     for (final Article article in articles) {
       await article.terms.load();
+      await article.domains.load();
     }
     return articles.toList();
   }
@@ -132,6 +134,7 @@ class DataProvider {
         .findAll();
     for (final Article article in articles) {
       await article.terms.load();
+      await article.domains.load();
     }
     return articles;
   }
@@ -150,6 +153,7 @@ class DataProvider {
     for (final Article? article in nullArticles) {
       if (article != null) {
         await article.terms.load();
+        await article.domains.load();
         resultArticles.add(article);
       }
     }
@@ -162,6 +166,7 @@ class DataProvider {
     for (Article? article in possibleArticles) {
       if (article != null) {
         await article.terms.load();
+        await article.domains.load();
         articles.add(article);
       }
     }

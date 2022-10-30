@@ -1,3 +1,7 @@
+import 'dart:collection';
+
+import 'package:france_termes/models/domain.dart';
+
 import '/models/metadata.dart';
 import '/models/statut.dart';
 import '/models/term.dart';
@@ -18,7 +22,7 @@ class XmlConstants {
   static const String langage = 'langue';
   static const String admis = 'admis';
   static const String domainList = 'Domaine';
-  static const String domainField = 'Dom';
+  static const String domainField = '<Dom';
   static const String termField = 'Terme';
   static const String termVariantes = 'variantes';
   static const String termVariante = 'variante';
@@ -38,12 +42,13 @@ class XmlConstants {
   static const String warning = "Attention";
   static const String toQuestion = "A-interroger";
   static const String defaultLang = "fr";
-  static const String subDomain =
-      "S-dom"; // TODO: Add a way to parse subdomains
+  static const String subDomainField =
+      "<S-dom"; // TODO: Add a way to parse subdomains
 }
 
 class TermeParser {
   final XmlDocument xml;
+  final Map<String, Domain> domainsMap = HashMap();
   TermeParser(this.xml);
 
   String parseNotes(XmlElement xmlArticle) {
@@ -94,14 +99,15 @@ class TermeParser {
   }
 
   TupleVariants parseEquivalentVariants(XmlElement xmlEquivalent) {
-    TupleVariants variants = Tuple2(<String>[], <String>[]);
+    final List<String> variantsTypes = [];
+    final List<String> variantsWords = [];
     for (final variante
         in xmlEquivalent.findAllElements(XmlConstants.termVariante)) {
       final value = variante.text.replaceAll('\n', "");
-      variants.item1.add(XmlConstants.varianteDefaultType);
-      variants.item2.add(value);
+      variantsTypes.add(XmlConstants.varianteDefaultType);
+      variantsWords.add(value);
     }
-    return variants;
+    return TupleVariants(variantsTypes, variantsWords);
   }
 
   TupleVariants parseTermVariants(XmlElement xmlTerm) {
@@ -188,22 +194,26 @@ class TermeParser {
     }
   }
 
-  List<String> parseSubDomaines(XmlElement xmlDomaine) {
-    // TODO: implent it.
-    throw [];
-  }
-
-  List<String> parseDomaines(XmlElement xmlArticle) {
-    List<String> domains = [];
+  void parseDomaines(
+      XmlElement xmlArticle, List<Domain> domains, List<int> subDomainsIndex) {
     for (final xmlDomaine
         in xmlArticle.findAllElements(XmlConstants.domainList)) {
-      for (final xmlDom
-          in xmlDomaine.findAllElements(XmlConstants.domainField)) {
-        final String domain = xmlDom.text;
-        domains.add(domain);
+      for (final child in xmlDomaine.children) {
+        final element = child.outerXml;
+        if (element.startsWith(XmlConstants.domainField)) {
+          String domain = child.text;
+          domainsMap.putIfAbsent(domain, () => Domain(domain, []));
+          domains.add(domainsMap[domain]!); //* Warning ^^^^^^
+        } else if (element.startsWith(XmlConstants.subDomainField)) {
+          String subDomain = child.text;
+          Domain currentDomain = domains.last;
+          int hashDomain = currentDomain.hashCode;
+          int idx = currentDomain.putIfAbsent(subDomain);
+          subDomainsIndex.add(hashDomain);
+          subDomainsIndex.add(idx);
+        }
       }
     }
-    return domains;
   }
 
   List<Term> parseAllTerms(XmlElement xmlArticle) {
@@ -228,7 +238,9 @@ class TermeParser {
     final String articleStringDate =
         xmlArticle.findElements(XmlConstants.articleDate).first.text;
     final DateTime articleDate = DateFormat('d/M/y').parse(articleStringDate);
-    final List<String> domains = parseDomaines(xmlArticle);
+    final List<Domain> domains = [];
+    final List<int> subDomainsIndex = [];
+    parseDomaines(xmlArticle, domains, subDomainsIndex);
     final Metadata articleMetadata = parseMetadata(xmlArticle);
     final List<Term> terms = parseAllTerms(xmlArticle);
     final String definition = parseDefinition(xmlArticle);
@@ -237,13 +249,14 @@ class TermeParser {
         articleNumero,
         articleDate,
         definition,
-        domains,
         articleMetadata.toSeeId,
+        subDomainsIndex,
         articleMetadata.notes,
         articleMetadata.source,
         articleMetadata.warning,
         articleMetadata.toQuestion);
     article.terms.addAll(terms);
+    article.domains.addAll(domains);
     return article;
   }
 

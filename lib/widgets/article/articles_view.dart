@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:france_termes/models/article.dart';
+import 'package:france_termes/models/domain.dart';
 import 'package:france_termes/models/statut.dart';
 import 'package:france_termes/models/term.dart';
 import 'package:france_termes/widgets/article/article_field/article_text_card.dart';
@@ -92,8 +93,22 @@ class ArticleView extends StatelessWidget {
     return buffer.toString();
   }
 
-  String buildDomainString(List<String> domains) {
-    return domains.join(" - ").toUpperCase();
+  String buildDomainString(List<Domain> domains, List<int> subDomainsIndex) {
+    final buffer = StringBuffer();
+    int d = 0;
+    for (final domain in domains) {
+      buffer.write(domain.field.toUpperCase());
+      for (int i = 0; i < subDomainsIndex.length; i += 2) {
+        if (domain.hashCode == subDomainsIndex[i]) {
+          buffer.write(" / ${domain.subFields[subDomainsIndex[i + 1]]}");
+        }
+      }
+      if (d != domains.length - 1) {
+        buffer.write(", ");
+      }
+      d++;
+    }
+    return buffer.toString();
   }
 
   void addPriviligiesField(
@@ -154,7 +169,10 @@ class ArticleView extends StatelessWidget {
       addField(l10n.antonyms, buildFrenchVariantString(antonyms), listField);
     }
     if (article.domains.isNotEmpty) {
-      addField(l10n.field, buildDomainString(article.domains), listField);
+      addField(
+          l10n.field,
+          buildDomainString(article.domains.toList(), article.subDomainsIndex),
+          listField);
     }
     if (equivalents.isNotEmpty) {
       addField(l10n.equivalents, buildEquivalentString(equivalents), listField);

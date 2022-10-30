@@ -27,35 +27,35 @@ const ArticleSchema = CollectionSchema(
       name: r'definition',
       type: IsarType.string,
     ),
-    r'domains': PropertySchema(
-      id: 2,
-      name: r'domains',
-      type: IsarType.stringList,
-    ),
     r'getUrl': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'getUrl',
       type: IsarType.string,
     ),
     r'hashCode': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'hashCode',
       type: IsarType.long,
     ),
     r'notes': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'notes',
       type: IsarType.string,
     ),
     r'numero': PropertySchema(
-      id: 6,
+      id: 5,
       name: r'numero',
       type: IsarType.string,
     ),
     r'source': PropertySchema(
-      id: 7,
+      id: 6,
       name: r'source',
       type: IsarType.string,
+    ),
+    r'subDomainsIndex': PropertySchema(
+      id: 7,
+      name: r'subDomainsIndex',
+      type: IsarType.longList,
     ),
     r'toQuestion': PropertySchema(
       id: 8,
@@ -85,6 +85,12 @@ const ArticleSchema = CollectionSchema(
       name: r'terms',
       target: r'Term',
       single: false,
+    ),
+    r'domains': LinkSchema(
+      id: 2882450642400863329,
+      name: r'domains',
+      target: r'Domain',
+      single: false,
     )
   },
   embeddedSchemas: {},
@@ -101,17 +107,11 @@ int _articleEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.definition.length * 3;
-  bytesCount += 3 + object.domains.length * 3;
-  {
-    for (var i = 0; i < object.domains.length; i++) {
-      final value = object.domains[i];
-      bytesCount += value.length * 3;
-    }
-  }
   bytesCount += 3 + object.getUrl.length * 3;
   bytesCount += 3 + object.notes.length * 3;
   bytesCount += 3 + object.numero.length * 3;
   bytesCount += 3 + object.source.length * 3;
+  bytesCount += 3 + object.subDomainsIndex.length * 8;
   bytesCount += 3 + object.toQuestion.length * 3;
   bytesCount += 3 + object.toSeeId.length * 8;
   bytesCount += 3 + object.warning.length * 3;
@@ -126,12 +126,12 @@ void _articleSerialize(
 ) {
   writer.writeDateTime(offsets[0], object.date);
   writer.writeString(offsets[1], object.definition);
-  writer.writeStringList(offsets[2], object.domains);
-  writer.writeString(offsets[3], object.getUrl);
-  writer.writeLong(offsets[4], object.hashCode);
-  writer.writeString(offsets[5], object.notes);
-  writer.writeString(offsets[6], object.numero);
-  writer.writeString(offsets[7], object.source);
+  writer.writeString(offsets[2], object.getUrl);
+  writer.writeLong(offsets[3], object.hashCode);
+  writer.writeString(offsets[4], object.notes);
+  writer.writeString(offsets[5], object.numero);
+  writer.writeString(offsets[6], object.source);
+  writer.writeLongList(offsets[7], object.subDomainsIndex);
   writer.writeString(offsets[8], object.toQuestion);
   writer.writeLongList(offsets[9], object.toSeeId);
   writer.writeString(offsets[10], object.warning);
@@ -145,13 +145,13 @@ Article _articleDeserialize(
 ) {
   final object = Article(
     id,
-    reader.readString(offsets[6]),
+    reader.readString(offsets[5]),
     reader.readDateTime(offsets[0]),
     reader.readString(offsets[1]),
-    reader.readStringList(offsets[2]) ?? [],
     reader.readLongList(offsets[9]) ?? [],
-    reader.readString(offsets[5]),
-    reader.readString(offsets[7]),
+    reader.readLongList(offsets[7]) ?? [],
+    reader.readString(offsets[4]),
+    reader.readString(offsets[6]),
     reader.readString(offsets[10]),
     reader.readString(offsets[8]),
   );
@@ -170,17 +170,17 @@ P _articleDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readStringList(offset) ?? []) as P;
-    case 3:
       return (reader.readString(offset)) as P;
-    case 4:
+    case 3:
       return (reader.readLong(offset)) as P;
+    case 4:
+      return (reader.readString(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
-      return (reader.readString(offset)) as P;
+      return (reader.readLongList(offset) ?? []) as P;
     case 8:
       return (reader.readString(offset)) as P;
     case 9:
@@ -197,12 +197,13 @@ Id _articleGetId(Article object) {
 }
 
 List<IsarLinkBase<dynamic>> _articleGetLinks(Article object) {
-  return [object.terms];
+  return [object.terms, object.domains];
 }
 
 void _articleAttach(IsarCollection<dynamic> col, Id id, Article object) {
   object.id = id;
   object.terms.attach(col, col.isar.collection<Term>(), r'terms', id);
+  object.domains.attach(col, col.isar.collection<Domain>(), r'domains', id);
 }
 
 extension ArticleQueryWhereSort on QueryBuilder<Article, Article, QWhere> {
@@ -462,225 +463,6 @@ extension ArticleQueryFilter
         property: r'definition',
         value: '',
       ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsElementEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'domains',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition>
-      domainsElementGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'domains',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsElementLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'domains',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsElementBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'domains',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition>
-      domainsElementStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'domains',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsElementEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'domains',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsElementContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'domains',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsElementMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'domains',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition>
-      domainsElementIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'domains',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition>
-      domainsElementIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'domains',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'domains',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'domains',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'domains',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'domains',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition>
-      domainsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'domains',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Article, Article, QAfterFilterCondition> domainsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'domains',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
     });
   }
 
@@ -1309,6 +1091,151 @@ extension ArticleQueryFilter
     });
   }
 
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      subDomainsIndexElementEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'subDomainsIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      subDomainsIndexElementGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'subDomainsIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      subDomainsIndexElementLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'subDomainsIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      subDomainsIndexElementBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'subDomainsIndex',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      subDomainsIndexLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'subDomainsIndex',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      subDomainsIndexIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'subDomainsIndex',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      subDomainsIndexIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'subDomainsIndex',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      subDomainsIndexLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'subDomainsIndex',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      subDomainsIndexLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'subDomainsIndex',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      subDomainsIndexLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'subDomainsIndex',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<Article, Article, QAfterFilterCondition> toQuestionEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1769,6 +1696,63 @@ extension ArticleQueryLinks
           r'terms', lower, includeLower, upper, includeUpper);
     });
   }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> domains(
+      FilterQuery<Domain> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'domains');
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> domainsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'domains', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> domainsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'domains', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> domainsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'domains', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> domainsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'domains', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition>
+      domainsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'domains', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> domainsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'domains', lower, includeLower, upper, includeUpper);
+    });
+  }
 }
 
 extension ArticleQuerySortBy on QueryBuilder<Article, Article, QSortBy> {
@@ -2019,12 +2003,6 @@ extension ArticleQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Article, Article, QDistinct> distinctByDomains() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'domains');
-    });
-  }
-
   QueryBuilder<Article, Article, QDistinct> distinctByGetUrl(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2056,6 +2034,12 @@ extension ArticleQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'source', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Article, Article, QDistinct> distinctBySubDomainsIndex() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'subDomainsIndex');
     });
   }
 
@@ -2100,12 +2084,6 @@ extension ArticleQueryProperty
     });
   }
 
-  QueryBuilder<Article, List<String>, QQueryOperations> domainsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'domains');
-    });
-  }
-
   QueryBuilder<Article, String, QQueryOperations> getUrlProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'getUrl');
@@ -2133,6 +2111,12 @@ extension ArticleQueryProperty
   QueryBuilder<Article, String, QQueryOperations> sourceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'source');
+    });
+  }
+
+  QueryBuilder<Article, List<int>, QQueryOperations> subDomainsIndexProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'subDomainsIndex');
     });
   }
 
