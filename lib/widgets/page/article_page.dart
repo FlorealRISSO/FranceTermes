@@ -107,15 +107,18 @@ class ArticlePage extends StatelessWidget {
 
     return Scaffold(
         appBar: DefaultAppBar(
-          leading: InkWell(
-              onTap: () => Navigator.of(context).pop(),
-              onLongPress: () =>
-                  Navigator.of(context).popUntil((route) => route.isFirst),
-              child: Icon(Icons.adaptive.arrow_back,
+          leading: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.adaptive.arrow_back,
                   color: ThemeConstants.actionsColor(context))),
           title: Text("Article",
               style: TextStyle(color: ThemeConstants.actionsColor(context))),
           actions: [
+            IconButton(
+                onPressed: () =>
+                    Navigator.of(context).popUntil((route) => route.isFirst),
+                icon: Icon(Icons.home,
+                    color: ThemeConstants.actionsColor(context))),
             _shareButton(context, _globalKey),
             IconButton(
               onPressed: () => _setClipboard(context),
