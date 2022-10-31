@@ -5,53 +5,63 @@ import '../models/article.dart';
 import '../parser/france_terme_parser.dart';
 
 class LocalApi {
-  static const String filename = "data.xml";
+  static const String _filename = "data.xml";
+  static const int _emptyVersion = 0;
   static final DateTime defaultDate = DateTime(2022, 09, 01);
 
   static Future<List<Article>> getArticlesFromAssets() async {
     return TermeParser(
-            XmlDocument.parse(await rootBundle.loadString("assets/$filename")))
+            XmlDocument.parse(await rootBundle.loadString("assets/$_filename")))
         .fullParse();
   }
 
-  static Future<DateTime> getLocalDate(
-      SharedPreferencesProvider provider) async {
-    final DateTime? date = await provider.getLocalDate();
+  static DateTime getLocalDate(SharedPreferencesProvider provider) {
+    final DateTime? date = provider.getLocalDate();
     if (date != null) {
       return date;
     }
     return defaultDate;
   }
 
-  static Future<DateTime> getSavedOnlineDate(
-      SharedPreferencesProvider provider) async {
-    final DateTime? date = await provider.getOnlineDate();
+  static DateTime getSavedOnlineDate(SharedPreferencesProvider provider) {
+    final DateTime? date = provider.getOnlineDate();
     if (date != null) {
       return date;
     }
     return defaultDate;
   }
 
-  static Future<DateTime> getLastVerification(
-      SharedPreferencesProvider provider) async {
-    final DateTime? date = await provider.getLastVerification();
+  static DateTime getLastVerification(SharedPreferencesProvider provider) {
+    final DateTime? date = provider.getLastVerification();
     if (date != null) {
       return date;
     }
     return defaultDate;
   }
 
-  static Future<void> setLocalDate(DateTime date) async {
-    await SharedPreferencesProvider().setLocalDate(date);
+  static void setLocalDate(DateTime date, SharedPreferencesProvider provider) {
+    provider.setLocalDate(date);
   }
 
-  static Future<void> setOnlineDate(
-      DateTime date, SharedPreferencesProvider provider) async {
-    await provider.setOnlineDate(date);
+  static void setOnlineDate(DateTime date, SharedPreferencesProvider provider) {
+    provider.setOnlineDate(date);
   }
 
-  static Future<void> setLastVerification(
-      SharedPreferencesProvider provider) async {
-    await provider.setLastVerification();
+  static void setLastVerification(SharedPreferencesProvider provider) {
+    provider.setLastVerification();
+  }
+
+  static int getAppVersion(SharedPreferencesProvider provider) {
+    int? appVersion = provider.getAppVersion();
+    if (appVersion != null) {
+      return appVersion;
+    } else {
+      return _emptyVersion;
+    }
+  }
+
+  static void setAppVersion(
+      int appVersion, SharedPreferencesProvider provider) {
+    provider.setAppVersion(appVersion);
   }
 }

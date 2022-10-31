@@ -2,16 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:france_termes/providers/data_provider.dart';
+import 'package:france_termes/providers/shared_preferences_provider.dart';
 import 'package:france_termes/widgets/page/home_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:isar/isar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SharedPreferences sharedPreferences =
+      await SharedPreferencesProvider.getSharedPreferences();
+  SharedPreferencesProvider preferencesProvider =
+      SharedPreferencesProvider(sharedPreferences);
+
   Isar isar = await DataProvider.openIsar();
-  DataProvider provider = DataProvider(isar);
-  WidgetsFlutterBinding.ensureInitialized();
+  DataProvider provider = DataProvider(isar, preferencesProvider);
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(FranceTermesApp(provider));

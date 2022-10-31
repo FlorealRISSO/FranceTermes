@@ -9,8 +9,8 @@ Widget unexpectedError(BuildContext context) {
 }
 
 class Launcher extends StatefulWidget {
-  final DataProvider provider;
-  const Launcher(this.provider, {Key? key}) : super(key: key);
+  final DataProvider dataProvider;
+  const Launcher(this.dataProvider, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -19,17 +19,17 @@ class Launcher extends StatefulWidget {
 }
 
 class _LauncherState extends State<Launcher> {
-  late final DataProvider provider;
+  late final DataProvider dataProvider;
 
   @override
   void initState() {
     super.initState();
-    provider = widget.provider;
+    dataProvider = widget.dataProvider;
   }
 
   Future<Tuple2<bool, DateTime>> _isUpdateNeeded() async {
     final Tuple2<bool, DateTime> dateInformations =
-        await DataProvider.isUpToDateLazy();
+        await dataProvider.isUpToDateLazy();
     bool updateNeeded = false;
     if (!dateInformations.item1) {
       await showDialog(
@@ -64,13 +64,13 @@ class _LauncherState extends State<Launcher> {
           if (snapshot.hasData) {
             final Tuple2<bool, DateTime> dateInformations =
                 snapshot.requireData as Tuple2<bool, DateTime>;
-            final bool isInit = /* false; */ provider.isInit();
+            final bool isInit = /* false; */ dataProvider.isInitInOkVersion();
             if (dateInformations.item1) {
-              return FutureUpdate(provider, dateInformations.item2);
+              return FutureUpdate(dataProvider, dateInformations.item2);
             } else if (!isInit) {
-              return FutureInit(provider);
+              return FutureInit(dataProvider);
             } else {
-              return SlidingSegmentedHome(provider);
+              return SlidingSegmentedHome(dataProvider);
             }
           } else {
             return Center(

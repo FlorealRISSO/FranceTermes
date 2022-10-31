@@ -20,11 +20,13 @@ extension DateOnlyCompare on DateTime {
 }
 
 class DataProvider {
-  static const int minArticles = 100;
+  static const int _minArticles = 7000;
+  static const int _appVersion = 2;
   final Isar isar;
+  final SharedPreferencesProvider peferencesProvider;
   int? articlesSize;
 
-  DataProvider(this.isar);
+  DataProvider(this.isar, this.peferencesProvider);
 
   static bool _isGreaterOrEqual(DateTime currentDate, DateTime lastModified) {
     return currentDate.compareTo(lastModified) >= 0;
@@ -33,7 +35,7 @@ class DataProvider {
   /// When the server is not accessible, returns true by default
   static Future<Tuple2<bool, DateTime>> isUpToDate(
       SharedPreferencesProvider provider) async {
-    final DateTime localDate = await LocalApi.getLocalDate(provider);
+    final DateTime localDate = LocalApi.getLocalDate(provider);
     try {
       final DateTime onlineDate = await ServerApi.getOnlineDate();
       LocalApi.setLastVerification(provider);
@@ -47,8 +49,8 @@ class DataProvider {
 
   static Future<Tuple2<bool, DateTime>> isUpdateOffline(
       SharedPreferencesProvider provider) async {
-    final DateTime localDate = await LocalApi.getLocalDate(provider);
-    final DateTime onlineDate = await LocalApi.getSavedOnlineDate(provider);
+    final DateTime localDate = LocalApi.getLocalDate(provider);
+    final DateTime onlineDate = LocalApi.getSavedOnlineDate(provider);
     final bool isUpToDate = _isGreaterOrEqual(localDate, onlineDate);
     if (!isUpToDate && await ServerApi.hasNetwork()) {
       return Tuple2(false, onlineDate);
@@ -57,19 +59,20 @@ class DataProvider {
     }
   }
 
-  static Future<Tuple2<bool, DateTime>> isUpToDateLazy() async {
-    SharedPreferencesProvider provider = SharedPreferencesProvider();
-    DateTime? lastVerification = await LocalApi.getLastVerification(provider);
+  Future<Tuple2<bool, DateTime>> isUpToDateLazy() {
+    DateTime? lastVerification =
+        LocalApi.getLastVerification(peferencesProvider);
     if (lastVerification.isSameDay(DateTime.now())) {
-      return isUpdateOffline(provider);
+      return isUpdateOffline(peferencesProvider);
     } else {
-      return isUpToDate(provider);
+      return isUpToDate(peferencesProvider);
     }
   }
 
-  bool isInit() {
+  bool isInitInOkVersion() {
     final int articlesSize = isar.articles.countSync();
-    return articlesSize > minArticles;
+    final int appVersion = LocalApi.getAppVersion(peferencesProvider);
+    return (articlesSize > _minArticles) && (appVersion == _appVersion);
   }
 
   static Future<Isar> openIsar() async {
@@ -79,8 +82,9 @@ class DataProvider {
     return isar;
   }
 
-  static Future<DataProvider> getDataProvider(Future<Isar> isar) async {
-    return DataProvider(await isar);
+  static DataProvider getDataProvider(
+      Isar isar, SharedPreferencesProvider provider) {
+    return DataProvider(isar, provider);
   }
 
   /// To ensure the safety this fonction
@@ -88,7 +92,7 @@ class DataProvider {
   Future<bool> update(List<Article> articles) async {
     _clear();
     _feed(articles);
-
+    LocalApi.setAppVersion(_appVersion, peferencesProvider);
     return true;
   }
 
@@ -184,12 +188,12 @@ class DataProvider {
   Future<void> updateFromDownload(DateTime lastVersion) async {
     try {
       String strFile = await ServerApi.downloadData();
-      await LocalApi.setLocalDate(lastVersion);
+      LocalApi.setLocalDate(lastVersion, peferencesProvider);
       final XmlDocument xmlFile = XmlDocument.parse(strFile);
       List<Article> articles = TermeParser(xmlFile).fullParse();
       await update(articles);
     } catch (_) {
-      if (isInit()) {
+      if (isInitInOkVersion()) {
         return;
       } else {
         await updateFromAsset();
@@ -200,6 +204,7 @@ class DataProvider {
 
   Future<void> updateFromAsset() async {
     final List<Article> articles = await LocalApi.getArticlesFromAssets();
+    LocalApi.setLocalDate(LocalApi.defaultDate, peferencesProvider);
     await update(articles);
   }
 

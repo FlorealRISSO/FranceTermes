@@ -4,10 +4,14 @@ class SharedPreferencesProvider {
   static const String _localDate = "localDate";
   static const String _lastVerification = "lastVerification";
   static const String _onlineDate = "onlineDate";
-  late final Future<SharedPreferences> futurePrefs;
-  SharedPreferencesProvider() {
-    futurePrefs = SharedPreferences.getInstance();
+  static const String _appVersion = "appVersion";
+  late final SharedPreferences futurePrefs;
+
+  static Future<SharedPreferences> getSharedPreferences() {
+    return SharedPreferences.getInstance();
   }
+
+  SharedPreferencesProvider(this.futurePrefs);
 
   static int dateToInt(DateTime date) {
     return date.millisecondsSinceEpoch;
@@ -17,39 +21,50 @@ class SharedPreferencesProvider {
     return DateTime.fromMillisecondsSinceEpoch(date);
   }
 
-  Future<DateTime?> getLocalDate() async {
-    final SharedPreferences prefs = await futurePrefs;
+  DateTime? getLocalDate() {
+    final SharedPreferences prefs = futurePrefs;
     final int? intLocalDate = prefs.getInt(_localDate);
     return intLocalDate != null ? intToDate(intLocalDate) : null;
   }
 
-  Future<void> setLocalDate(DateTime localDate) async {
-    final SharedPreferences prefs = await futurePrefs;
-    await prefs.setInt(_localDate, dateToInt(localDate));
+  void setLocalDate(DateTime localDate) {
+    final SharedPreferences prefs = futurePrefs;
+    prefs.setInt(_localDate, dateToInt(localDate));
     return;
   }
 
-  Future<DateTime?> getOnlineDate() async {
-    final SharedPreferences prefs = await futurePrefs;
+  DateTime? getOnlineDate() {
+    final SharedPreferences prefs = futurePrefs;
     final int? intLocalDate = prefs.getInt(_onlineDate);
     return intLocalDate != null ? intToDate(intLocalDate) : null;
   }
 
-  Future<void> setOnlineDate(DateTime onlineDate) async {
-    final SharedPreferences prefs = await futurePrefs;
-    await prefs.setInt(_onlineDate, dateToInt(onlineDate));
+  void setOnlineDate(DateTime onlineDate) {
+    final SharedPreferences prefs = futurePrefs;
+    prefs.setInt(_onlineDate, dateToInt(onlineDate));
     return;
   }
 
-  Future<DateTime?> getLastVerification() async {
-    final SharedPreferences prefs = await futurePrefs;
+  DateTime? getLastVerification() {
+    final SharedPreferences prefs = futurePrefs;
     final int? lastVerification = prefs.getInt(_lastVerification);
     return lastVerification != null ? intToDate(lastVerification) : null;
   }
 
-  Future<void> setLastVerification() async {
-    final SharedPreferences prefs = await futurePrefs;
+  void setLastVerification() {
+    final SharedPreferences prefs = futurePrefs;
     final int date = dateToInt(DateTime.now());
-    await prefs.setInt(_lastVerification, date);
+    prefs.setInt(_lastVerification, date);
+  }
+
+  int? getAppVersion() {
+    final SharedPreferences prefs = futurePrefs;
+    final int? appVersion = prefs.getInt(_appVersion);
+    return appVersion;
+  }
+
+  void setAppVersion(int appVersion) {
+    final SharedPreferences prefs = futurePrefs;
+    prefs.setInt(_appVersion, appVersion);
   }
 }
