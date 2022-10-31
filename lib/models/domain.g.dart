@@ -26,11 +26,6 @@ const DomainSchema = CollectionSchema(
       id: 1,
       name: r'hashCode',
       type: IsarType.long,
-    ),
-    r'subFields': PropertySchema(
-      id: 2,
-      name: r'subFields',
-      type: IsarType.stringList,
     )
   },
   estimateSize: _domainEstimateSize,
@@ -55,11 +50,17 @@ const DomainSchema = CollectionSchema(
   },
   links: {
     r'articles': LinkSchema(
-      id: 2629167387255304427,
+      id: 8598259593155327081,
       name: r'articles',
       target: r'Article',
       single: false,
-      linkName: r'domains',
+      linkName: r'fields',
+    ),
+    r'subFields': LinkSchema(
+      id: 6784378821952482895,
+      name: r'subFields',
+      target: r'SubDomain',
+      single: false,
     )
   },
   embeddedSchemas: {},
@@ -76,13 +77,6 @@ int _domainEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.field.length * 3;
-  bytesCount += 3 + object.subFields.length * 3;
-  {
-    for (var i = 0; i < object.subFields.length; i++) {
-      final value = object.subFields[i];
-      bytesCount += value.length * 3;
-    }
-  }
   return bytesCount;
 }
 
@@ -94,7 +88,6 @@ void _domainSerialize(
 ) {
   writer.writeString(offsets[0], object.field);
   writer.writeLong(offsets[1], object.hashCode);
-  writer.writeStringList(offsets[2], object.subFields);
 }
 
 Domain _domainDeserialize(
@@ -105,7 +98,6 @@ Domain _domainDeserialize(
 ) {
   final object = Domain(
     reader.readString(offsets[0]),
-    reader.readStringList(offsets[2]) ?? [],
   );
   object.id = id;
   return object;
@@ -122,8 +114,6 @@ P _domainDeserializeProp<P>(
       return (reader.readString(offset)) as P;
     case 1:
       return (reader.readLong(offset)) as P;
-    case 2:
-      return (reader.readStringList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -134,12 +124,14 @@ Id _domainGetId(Domain object) {
 }
 
 List<IsarLinkBase<dynamic>> _domainGetLinks(Domain object) {
-  return [object.articles];
+  return [object.articles, object.subFields];
 }
 
 void _domainAttach(IsarCollection<dynamic> col, Id id, Domain object) {
   object.id = id;
   object.articles.attach(col, col.isar.collection<Article>(), r'articles', id);
+  object.subFields
+      .attach(col, col.isar.collection<SubDomain>(), r'subFields', id);
 }
 
 extension DomainQueryWhereSort on QueryBuilder<Domain, Domain, QWhere> {
@@ -496,225 +488,6 @@ extension DomainQueryFilter on QueryBuilder<Domain, Domain, QFilterCondition> {
       ));
     });
   }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsElementEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'subFields',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition>
-      subFieldsElementGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'subFields',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsElementLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'subFields',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsElementBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'subFields',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition>
-      subFieldsElementStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'subFields',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsElementEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'subFields',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsElementContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'subFields',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsElementMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'subFields',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition>
-      subFieldsElementIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'subFields',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition>
-      subFieldsElementIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'subFields',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'subFields',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'subFields',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'subFields',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'subFields',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition>
-      subFieldsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'subFields',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'subFields',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
-    });
-  }
 }
 
 extension DomainQueryObject on QueryBuilder<Domain, Domain, QFilterCondition> {}
@@ -773,6 +546,63 @@ extension DomainQueryLinks on QueryBuilder<Domain, Domain, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'articles', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFields(
+      FilterQuery<SubDomain> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'subFields');
+    });
+  }
+
+  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'subFields', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'subFields', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'subFields', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'subFields', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Domain, Domain, QAfterFilterCondition>
+      subFieldsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'subFields', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Domain, Domain, QAfterFilterCondition> subFieldsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'subFields', lower, includeLower, upper, includeUpper);
     });
   }
 }
@@ -854,12 +684,6 @@ extension DomainQueryWhereDistinct on QueryBuilder<Domain, Domain, QDistinct> {
       return query.addDistinctBy(r'hashCode');
     });
   }
-
-  QueryBuilder<Domain, Domain, QDistinct> distinctBySubFields() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'subFields');
-    });
-  }
 }
 
 extension DomainQueryProperty on QueryBuilder<Domain, Domain, QQueryProperty> {
@@ -878,12 +702,6 @@ extension DomainQueryProperty on QueryBuilder<Domain, Domain, QQueryProperty> {
   QueryBuilder<Domain, int, QQueryOperations> hashCodeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'hashCode');
-    });
-  }
-
-  QueryBuilder<Domain, List<String>, QQueryOperations> subFieldsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'subFields');
     });
   }
 }

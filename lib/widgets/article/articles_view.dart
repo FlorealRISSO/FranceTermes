@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:france_termes/models/article.dart';
 import 'package:france_termes/models/domain.dart';
 import 'package:france_termes/models/statut.dart';
+import 'package:france_termes/models/sub_domain.dart';
 import 'package:france_termes/models/term.dart';
 import 'package:france_termes/widgets/article/article_field/article_text_card.dart';
 import 'package:collection/collection.dart';
@@ -96,16 +97,15 @@ class ArticleView extends StatelessWidget {
     return buffer.toString();
   }
 
-  String buildDomainString(List<Domain> domains, List<int> subDomainsIndex) {
+  String buildDomainString(List<Domain> domains) {
     final buffer = StringBuffer();
     int d = 0;
     for (final domain in domains) {
       String separator = "/";
       buffer.write(domain.field.toUpperCase());
-      for (int i = 0; i < subDomainsIndex.length; i += 2) {
-        if (domain.hashCode == subDomainsIndex[i]) {
-          buffer
-              .write(" $separator ${domain.subFields[subDomainsIndex[i + 1]]}");
+      for (SubDomain subDomain in article.subFields) {
+        if (subDomain.field.value == domain) {
+          buffer.write(" $separator ${subDomain.subField}");
           separator = "-";
         }
       }
@@ -175,11 +175,9 @@ class ArticleView extends StatelessWidget {
     if (antonyms.isNotEmpty) {
       addField(l10n.antonyms, buildFrenchVariantString(antonyms), listField);
     }
-    if (article.domains.isNotEmpty) {
+    if (article.fields.isNotEmpty) {
       addField(
-          l10n.field,
-          buildDomainString(article.domains.toList(), article.subDomainsIndex),
-          listField);
+          l10n.field, buildDomainString(article.fields.toList()), listField);
     }
     if (admitted.isNotEmpty) {
       addField(l10n.admitted, buildEquivalentString(admitted), listField);

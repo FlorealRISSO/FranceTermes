@@ -1,3 +1,4 @@
+import 'package:france_termes/models/sub_domain.dart';
 import 'package:france_termes/models/term.dart';
 import "package:isar/isar.dart";
 
@@ -21,28 +22,14 @@ class Article {
   // Terms :
   final IsarLinks<Term> terms = IsarLinks();
   // Domains :
-  final IsarLinks<Domain> domains = IsarLinks();
-
-  /// Informations :
-  /// Even index -> hash of the domain it refers to
-  /// Odd index -> index of the sub-domain into the domain class
-  final List<int> subDomainsIndex;
-
+  final IsarLinks<Domain> fields = IsarLinks();
+  final IsarLinks<SubDomain> subFields = IsarLinks();
   // Definition :
   final String definition;
   String get getUrl => baseUrl + numero;
 
-  Article(
-      this.id,
-      this.numero,
-      this.date,
-      this.definition,
-      this.toSeeId,
-      this.subDomainsIndex,
-      this.notes,
-      this.source,
-      this.warning,
-      this.toQuestion);
+  Article(this.id, this.numero, this.date, this.definition, this.toSeeId,
+      this.notes, this.source, this.warning, this.toQuestion);
 
   @override
   String toString() {
@@ -52,7 +39,7 @@ class Article {
   String toRead() {
     return '''Article $numero - $id
     terms : $terms
-    domains : $domains
+    domains : $fields
     ''';
   }
 

@@ -1,4 +1,5 @@
 import 'package:france_termes/models/article.dart';
+import 'package:france_termes/models/sub_domain.dart';
 import 'package:isar/isar.dart';
 part 'domain.g.dart';
 
@@ -6,21 +7,25 @@ part 'domain.g.dart';
 class Domain {
   Id id = Isar.autoIncrement;
 
-  @Backlink(to: "domains")
+  @Backlink(to: "fields")
   IsarLinks<Article> articles = IsarLinks();
+  IsarLinks<SubDomain> subFields = IsarLinks();
   @Index()
   final String field;
-  final List<String> subFields;
 
-  Domain(this.field, this.subFields);
+  Domain(this.field);
 
-  int putIfAbsent(String subField) {
-    if (!subFields.contains(subField)) {
-      subFields.add(subField);
-      return subFields.length - 1;
-    } else {
-      return subFields.indexOf(subField);
+  int indexOf(String subField) {
+    int pos = -1;
+    int i = 0;
+    for (final elem in subFields) {
+      if (subField == elem.subField) {
+        pos = i;
+        break;
+      }
+      i++;
     }
+    return pos;
   }
 
   @override

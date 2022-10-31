@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:france_termes/models/domain.dart';
+import 'package:france_termes/models/sub_domain.dart';
 
 import '/models/metadata.dart';
 import '/models/statut.dart';
@@ -49,6 +50,7 @@ class XmlConstants {
 class TermeParser {
   final XmlDocument xml;
   final Map<String, Domain> domainsMap = HashMap();
+  final Map<int, SubDomain> subDomainMap = HashMap();
   TermeParser(this.xml);
 
   String parseNotes(XmlElement xmlArticle) {
@@ -197,23 +199,31 @@ class TermeParser {
     }
   }
 
-  void parseDomaines(
-      XmlElement xmlArticle, List<Domain> domains, List<int> subDomainsIndex) {
+  void parseDomaines(XmlElement xmlArticle, List<Domain> domains,
+      List<SubDomain> subDomainList) {
     for (final xmlDomaine
         in xmlArticle.findAllElements(XmlConstants.domainList)) {
       for (final child in xmlDomaine.children) {
         final element = child.outerXml;
         if (element.startsWith(XmlConstants.domainField)) {
-          String domain = child.text;
-          domainsMap.putIfAbsent(domain, () => Domain(domain, []));
-          domains.add(domainsMap[domain]!); //* Warning ^^^^^^
+          // If it's a Domain
+          String domainStr = child.text;
+          domainsMap.putIfAbsent(domainStr, () => Domain(domainStr));
+          domains.add(domainsMap[domainStr]!); //* Warning ^^^^^^
         } else if (element.startsWith(XmlConstants.subDomainField)) {
-          String subDomain = child.text;
+          // If it's a SubDomain
+          String subDomainStr = child.text;
           Domain currentDomain = domains.last;
-          int hashDomain = currentDomain.hashCode;
-          int idx = currentDomain.putIfAbsent(subDomain);
-          subDomainsIndex.add(hashDomain);
-          subDomainsIndex.add(idx);
+          int uniqueKey = subDomainStr.hashCode + currentDomain.hashCode;
+          if (subDomainMap.containsKey(uniqueKey)) {
+            SubDomain subDomain = subDomainMap[uniqueKey]!;
+            subDomainList.add(subDomain);
+          } else {
+            SubDomain subDomain = SubDomain(subDomainStr);
+            subDomainMap[uniqueKey] = subDomain;
+            currentDomain.subFields.add(subDomain);
+            subDomainList.add(subDomain);
+          }
         }
       }
     }
@@ -242,8 +252,8 @@ class TermeParser {
         xmlArticle.findElements(XmlConstants.articleDate).first.text;
     final DateTime articleDate = DateFormat('d/M/y').parse(articleStringDate);
     final List<Domain> domains = [];
-    final List<int> subDomainsIndex = [];
-    parseDomaines(xmlArticle, domains, subDomainsIndex);
+    final List<SubDomain> subDomains = [];
+    parseDomaines(xmlArticle, domains, subDomains);
     final Metadata articleMetadata = parseMetadata(xmlArticle);
     final List<Term> terms = parseAllTerms(xmlArticle);
     final String definition = parseDefinition(xmlArticle);
@@ -253,13 +263,13 @@ class TermeParser {
         articleDate,
         definition,
         articleMetadata.toSeeId,
-        subDomainsIndex,
         articleMetadata.notes,
         articleMetadata.source,
         articleMetadata.warning,
         articleMetadata.toQuestion);
     article.terms.addAll(terms);
-    article.domains.addAll(domains);
+    article.fields.addAll(domains);
+    article.subFields.addAll(subDomains);
     return article;
   }
 

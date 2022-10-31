@@ -34,9 +34,9 @@ class ArticlePreview extends StatelessWidget {
     if (privileged != null) {
       children.add(ArticlePrivilegedTextField(privileged));
     }
-    if (article.domains.isNotEmpty) {
+    if (article.fields.isNotEmpty) {
       children
-          .add(ArticleDomainTextField([article.domains.first.field])); //TODO...
+          .add(ArticleDomainTextField([article.fields.first.field])); //TODO...
     }
     if (equivalent != null) {
       children.add(ArticleEquivalentTextField(equivalent));
