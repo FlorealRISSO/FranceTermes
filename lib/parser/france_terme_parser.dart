@@ -146,9 +146,12 @@ class TermeParser {
         partOfSpeech.hashCode;
   }
 
-  parseEquivalentWord(XmlElement xmlEquivalent, String langage,
+  void parseEquivalentWord(XmlElement xmlEquivalent, String langage,
       List<Term> equivalents, TupleVariants variants) {
-    final int statut = Statut.fromStr(Statut.equivalent);
+    String? admitted = xmlEquivalent.getAttribute(XmlConstants.admis);
+    final int statut = admitted != null && admitted == XmlConstants.admis
+        ? Statut.fromStr(admitted)
+        : Statut.fromStr(Statut.equivalent);
     for (final equivalentProp
         in xmlEquivalent.findAllElements(XmlConstants.equivalentProp)) {
       final word = equivalentProp.text.replaceAll('\n', ''); // Cleaning
@@ -167,7 +170,7 @@ class TermeParser {
     }
   }
 
-  parseEquivalent(XmlElement xmlArticle, List<Term> equivalents) {
+  void parseEquivalent(XmlElement xmlArticle, List<Term> equivalents) {
     for (final xmlEquivalent
         in xmlArticle.findAllElements(XmlConstants.equivalentField)) {
       final equivalentVariants = parseEquivalentVariants(xmlEquivalent);

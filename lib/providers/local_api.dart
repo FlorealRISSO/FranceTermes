@@ -6,7 +6,7 @@ import '../parser/france_terme_parser.dart';
 
 class LocalApi {
   static const String filename = "data.xml";
-  static final DateTime defaultDate = DateTime(2022, 05, 28);
+  static final DateTime defaultDate = DateTime(2022, 09, 01);
 
   static Future<List<Article>> getArticlesFromAssets() async {
     return TermeParser(

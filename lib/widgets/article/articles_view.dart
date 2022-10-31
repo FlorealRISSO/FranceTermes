@@ -23,7 +23,7 @@ class ArticleView extends StatelessWidget {
 
   /// To understand read `statut.dart`
   void buildFields(Tuple4Terms terms, List<Term> synonyms, List<Term> antonyms,
-      List<Term> equivalents) {
+      List<Term> equivalents, List<Term> admitted) {
     for (Term term in article.terms) {
       switch (term.statut) {
         case Statut.iToponyme:
@@ -46,6 +46,9 @@ class ArticleView extends StatelessWidget {
           break;
         case Statut.iEquivalent:
           equivalents.add(term);
+          break;
+        case Statut.iAdmis:
+          admitted.add(term);
           break;
         default:
       }
@@ -97,14 +100,17 @@ class ArticleView extends StatelessWidget {
     final buffer = StringBuffer();
     int d = 0;
     for (final domain in domains) {
+      String separator = "/";
       buffer.write(domain.field.toUpperCase());
       for (int i = 0; i < subDomainsIndex.length; i += 2) {
         if (domain.hashCode == subDomainsIndex[i]) {
-          buffer.write(" / ${domain.subFields[subDomainsIndex[i + 1]]}");
+          buffer
+              .write(" $separator ${domain.subFields[subDomainsIndex[i + 1]]}");
+          separator = "-";
         }
       }
       if (d != domains.length - 1) {
-        buffer.write(", ");
+        buffer.write(" - ");
       }
       d++;
     }
@@ -152,7 +158,8 @@ class ArticleView extends StatelessWidget {
     final List<Term> synonyms = [];
     final List<Term> antonyms = [];
     final List<Term> equivalents = [];
-    buildFields(terms, synonyms, antonyms, equivalents);
+    final List<Term> admitted = [];
+    buildFields(terms, synonyms, antonyms, equivalents, admitted);
     sortTerms([synonyms, antonyms, equivalents]);
 
     List<Widget> listField = [];
@@ -173,6 +180,9 @@ class ArticleView extends StatelessWidget {
           l10n.field,
           buildDomainString(article.domains.toList(), article.subDomainsIndex),
           listField);
+    }
+    if (admitted.isNotEmpty) {
+      addField(l10n.admitted, buildEquivalentString(admitted), listField);
     }
     if (equivalents.isNotEmpty) {
       addField(l10n.equivalents, buildEquivalentString(equivalents), listField);

@@ -31,6 +31,10 @@
     "@toponym":{
         "description" : "Indicate the toponym text field"
     },
+    "admitted" : "Equivalent(s) admitted :",
+    "@admitted" : {
+        "description" : "Indicate the admitted text field"
+    },
     "field" : "Field(s) :",
     "@field":{
         "description" : "Indicate the field text field"

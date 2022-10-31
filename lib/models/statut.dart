@@ -4,35 +4,31 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Statut {
   static const String toponyme = "toponyme";
-  static const String frToponyme = "Toponyme";
   static const int iToponyme = 0;
 
   static const String capitale = "capitale";
-  static const String frCapitale = "Capitale";
   static const int iCapitale = 1;
 
   static const String privilegie = "privilegie";
-  static const String frPrivilegie = "Terme";
   static const int iPrivilegie = 2;
 
   static const String siege = "siege";
-  static const String frSiege = "Siège";
   static const int iSiege = 3;
 
   static const String synonyme = "synonyme";
-  static const String frSynonyme = "Synonyme(s)";
   static const int iSynonyme = 4;
 
   static const String antonyme = "antonyme";
-  static const String frAntonyme = "Antonyme(s)";
   static const int iAntonyme = 5;
 
   static const String equivalent = "equivalent";
-  static const String frEquivalent = "Équivalent(s) étrangé(s)";
   static const int iEquivalent = 6;
 
+  static const String admis = "admis";
+  static const int iAdmis = 7;
+
   static const String unknown = "unknown";
-  static const int iUnknown = 7;
+  static const int iUnknown = 8;
 
   static int fromStr(String statut) {
     final String statutSimplified = removeDiacritics(statut.toLowerCase());
@@ -51,29 +47,10 @@ class Statut {
         return iAntonyme;
       case equivalent:
         return iEquivalent;
+      case admis:
+        return iAdmis;
       default:
         return iUnknown;
-    }
-  }
-
-  static String fromInt(int statut) {
-    switch (statut) {
-      case iToponyme:
-        return toponyme;
-      case iCapitale:
-        return capitale;
-      case iPrivilegie:
-        return privilegie;
-      case iSiege:
-        return siege;
-      case iSynonyme:
-        return synonyme;
-      case iAntonyme:
-        return antonyme;
-      case iEquivalent:
-        return equivalent;
-      default:
-        return unknown;
     }
   }
 
@@ -93,6 +70,8 @@ class Statut {
         return AppLocalizations.of(context)!.antonyms;
       case iEquivalent:
         return AppLocalizations.of(context)!.equivalents;
+      case iAdmis:
+        return AppLocalizations.of(context)!.admitted;
       default:
         return unknown;
     }

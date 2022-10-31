@@ -9,6 +9,7 @@ import 'package:france_termes/widgets/article/articles_view.dart';
 import 'package:france_termes/widgets/default_app_bar.dart';
 import 'package:france_termes/widgets/themes/theme_constants.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -90,7 +91,7 @@ class ArticlePage extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Text(
-              "$dateInformation ${article.date.day}/${article.date.month}/${article.date.year}",
+              "$dateInformation ${DateFormat.yMd('fr').format(article.date)}",
               textAlign: TextAlign.right,
             )));
     List<Widget> children = [

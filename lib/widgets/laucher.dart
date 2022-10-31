@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:france_termes/widgets/sliding_segmented_home.dart';
-import 'package:isar/isar.dart';
 import 'package:tuple/tuple.dart';
 import '../providers/data_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -65,7 +64,7 @@ class _LauncherState extends State<Launcher> {
           if (snapshot.hasData) {
             final Tuple2<bool, DateTime> dateInformations =
                 snapshot.requireData as Tuple2<bool, DateTime>;
-            final bool isInit = provider.isInit();
+            final bool isInit = /* false; */ provider.isInit();
             if (dateInformations.item1) {
               return FutureUpdate(provider, dateInformations.item2);
             } else if (!isInit) {

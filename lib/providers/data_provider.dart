@@ -202,4 +202,16 @@ class DataProvider {
     final List<Article> articles = await LocalApi.getArticlesFromAssets();
     await update(articles);
   }
+
+  List<Domain> getDomains() {
+    final domainsSize = isar.domains.countSync();
+    final List<Domain> domains = [];
+    for (var i = 0; i < domainsSize; i++) {
+      final domain = isar.domains.getSync(i);
+      if (domain != null) {
+        domains.add(domain);
+      }
+    }
+    return domains;
+  }
 }

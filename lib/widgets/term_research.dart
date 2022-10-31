@@ -1,17 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:france_termes/providers/data_provider.dart';
 import 'package:diacritic/diacritic.dart' as diacritic;
+
 import '../models/article.dart';
+import '../models/domain.dart';
 import '../models/term.dart';
 import 'article_preview/article_preview.dart';
 
 class TermResearch extends SearchDelegate {
   DataProvider provider;
+  late List<Domain> domains;
   TermResearch(this.provider);
   Widget? _widgetSuggestions;
-
   @override
   String get searchFieldLabel => "...";
+
+  /* => Ajout domain...
+  void onChange(setState, Domain? domain) => setState(() => _selected = domain);
+
+  Widget _buildAnnexe(context, setState) {
+    List<Widget> widgets = [
+      ListTile(
+          title: const Text('Aucun'),
+          leading: Radio<Domain>(
+              value: _empty,
+              groupValue: _selected,
+              onChanged: (Domain? value) => setState(() => _selected = value)))
+    ];
+    for (final domain in domains) {
+      widgets.add(ListTile(
+          title: Text(domain.field),
+          leading: Radio<Domain>(
+              value: domain,
+              groupValue: _selected,
+              onChanged: (Domain? value) =>
+                  setState(() => _selected = value))));
+    }
+    return SimpleDialog(
+        title: const Padding(
+            padding: EdgeInsets.only(bottom: 8), child: Text('Domaines: ')),
+        children: widgets);
+  }
+
+  StatefulBuilder buildRadio() {
+    return StatefulBuilder(
+        builder: (context, setState) => _buildAnnexe(context, setState));
+  }
+  */
 
   @override
   List<Widget> buildActions(BuildContext context) {
