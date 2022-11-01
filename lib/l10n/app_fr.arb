@@ -13,7 +13,7 @@
     "definition":"Définition :",
     "seeAlso" : "Voir aussi :",
     "about" : "À propos",
-    "aboutText" : "Cette application est une proposition de réutilisation du jeu de données « base-franceterme-termes-scientifiques-et-techniques » dans le but d’avoir une version mobile du site FranceTerme. Elle a été codée sur le temps libre d’un étudiant d’informatique, il est possible qu’elle contienne des bogues, dans ce cas n’hésiter pas à me contacter pour me les faire remonter.",
+    "aboutText" : "Cette application est une proposition de réutilisation du jeu de données « base-franceterme-termes-scientifiques-et-techniques » dans le but d’avoir une version mobile du site FranceTerme. Elle a été codée sur le temps libre d’un étudiant d’informatique, il est possible qu’elle contienne des bogues, dans ce cas n’hésitez pas à me contacter pour me les faire remonter.",
     "legalDisclaimer" : "Mentions légales",
     "legalDisclaimerText" : "Les données utilisées par l’application sont sous licence ouverte Etalab, elles proviennent de « Délégation générale à la langue française et aux langues de France (DGLFLF) ». Quant à l’application, elle est sous licence libre MIT.",
     "author" : "Auteur",
