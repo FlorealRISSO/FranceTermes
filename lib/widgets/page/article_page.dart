@@ -68,11 +68,20 @@ class ArticlePage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Article> articles = snapshot.requireData! as List<Article>;
-          return Column(
-            children: articles
-                .map((article) => ArticlePreview(article, provider))
-                .toList(),
-          );
+          if (articles.isEmpty) {
+            return const Text("");
+          }
+          List<Widget> articlesW = [
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                child: Text(AppLocalizations.of(context)!.seeAlso)),
+          ];
+
+          for (final article in articles) {
+            articlesW.add(ArticlePreview(article, provider));
+          }
+          return Column(children: articlesW);
         } else if (snapshot.hasError) {
           return Text(
               AppLocalizations.of(context)!.errorMessage); //TODO: change it...
@@ -99,9 +108,7 @@ class ArticlePage extends StatelessWidget {
       date,
     ];
     if (article.toSeeId.isNotEmpty) {
-      children.add(Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-          child: Text(AppLocalizations.of(context)!.seeAlso)));
+      //children.add();
     }
 
     children.add(_buildFuturePreview());

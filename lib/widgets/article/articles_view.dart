@@ -129,22 +129,6 @@ class ArticleView extends StatelessWidget {
     }
   }
 
-  // void addListField(BuildContext context, String fieldName, List<Term> terms,
-  //     List<Widget> children) {
-  //   if (terms.isNotEmpty) {
-  //     _addField(
-  //         context, fieldName, ArticleFrenchTermTextField(terms), children);
-  //   }
-  // }
-
-  // void addEquivalentListField(BuildContext context, String fieldName,
-  //     List<Term> terms, List<Widget> children) {
-  //   if (terms.isNotEmpty) {
-  //     _addField(
-  //         context, fieldName, ArticleEquivalentTermTextField(terms), children);
-  //   }
-  // }
-
   void sortTerms(final List<List<Term>> listOfList) {
     for (final list in listOfList) {
       list.sort((term1, term2) => term1.word.compareTo(term2.word));

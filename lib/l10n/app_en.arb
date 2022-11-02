@@ -47,7 +47,7 @@
     "@definition":{
         "description" : "Indicate the definition text field"
     },
-    "seeAlso" : "See also :",
+    "seeAlso" : "See also",
     "@seeAlso":{
         "description" : "Indicate the see also articles"
     },

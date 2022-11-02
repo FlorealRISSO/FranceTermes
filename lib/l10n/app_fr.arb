@@ -11,7 +11,7 @@
     "field" : "Domaine(s) :",
     "notes" : "Note(s) :",
     "definition":"Définition :",
-    "seeAlso" : "Voir aussi :",
+    "seeAlso" : "Voir aussi",
     "about" : "À propos",
     "aboutText" : "Cette application est une proposition de réutilisation du jeu de données « base-franceterme-termes-scientifiques-et-techniques » dans le but d’avoir une version mobile du site FranceTerme. Elle a été codée sur le temps libre d’un étudiant d’informatique, il est possible qu’elle contienne des bogues, dans ce cas n’hésitez pas à me contacter pour me les faire remonter.",
     "legalDisclaimer" : "Mentions légales",

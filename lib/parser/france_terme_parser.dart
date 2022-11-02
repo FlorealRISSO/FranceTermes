@@ -83,7 +83,6 @@ class TermeParser {
   /// the first is in the field <Voir></Voir>
   /// the second is in <Terme> when the attribute statut="antonyme" there is the attribute url...
   void parseToSee(XmlElement xmlArticle, List<int> toSee) {
-    final List<int> toSee = [];
     for (final XmlElement elements
         in xmlArticle.findAllElements(XmlConstants.toSee)) {
       for (final XmlElement element
@@ -263,8 +262,8 @@ class TermeParser {
     final List<SubDomain> subDomains = [];
     parseDomaines(xmlArticle, domains, subDomains);
     final List<int> toSee = [];
-    final Metadata articleMetadata = parseMetadata(xmlArticle, toSee);
     final List<Term> terms = parseAllTerms(xmlArticle, toSee);
+    final Metadata articleMetadata = parseMetadata(xmlArticle, toSee);
     final String definition = parseDefinition(xmlArticle);
     final article = Article(
         articleId,
