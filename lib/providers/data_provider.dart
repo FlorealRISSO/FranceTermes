@@ -101,11 +101,10 @@ class DataProvider {
   Future<List<Term>> searchWords(String query) async {
     final List<Term> terms = await isar.terms
         .filter()
-        .simplifiedStartsWith(query, caseSensitive: false)
+        .simplifiedWordsUElementStartsWith(query, caseSensitive: false)
         .or()
-        .wordStartsWith(query, caseSensitive: false)
-        .or()
-        .variantWordsElementStartsWith(query, caseSensitive: false)
+        .simplifiedAndMasculinizedWordsUElementStartsWith(query,
+            caseSensitive: false)
         .findAll();
     return terms;
   }
@@ -113,11 +112,10 @@ class DataProvider {
   Future<List<Article>> searchArticles(String query) async {
     final List<Term> terms = await isar.terms
         .filter()
-        .simplifiedStartsWith(query, caseSensitive: false)
+        .simplifiedWordsUElementStartsWith(query, caseSensitive: false)
         .or()
-        .wordStartsWith(query, caseSensitive: false)
-        .or()
-        .variantWordsElementStartsWith(query, caseSensitive: false)
+        .simplifiedAndMasculinizedWordsUElementStartsWith(query,
+            caseSensitive: false)
         .findAll();
     Set<Article> articles = {};
     for (final Term term in terms) {

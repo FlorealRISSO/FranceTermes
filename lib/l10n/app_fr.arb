@@ -34,5 +34,6 @@
     "dataset":"Jeu de données",
     "website":"Site officiel",
     "mailInformation":"L'adresse e-mail a été copiée dans le presse-papiers",
-    "dateInformation" : "Journal officiel du"
+    "dateInformation" : "Journal officiel du",
+    "or" : "ou"
 }

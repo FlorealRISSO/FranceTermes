@@ -32,28 +32,33 @@ const TermSchema = CollectionSchema(
       name: r'partOfSpeech',
       type: IsarType.string,
     ),
-    r'simplified': PropertySchema(
+    r'simplifiedAndMasculinizedWordsU': PropertySchema(
       id: 3,
-      name: r'simplified',
-      type: IsarType.string,
+      name: r'simplifiedAndMasculinizedWordsU',
+      type: IsarType.stringList,
+    ),
+    r'simplifiedWordsU': PropertySchema(
+      id: 4,
+      name: r'simplifiedWordsU',
+      type: IsarType.stringList,
     ),
     r'statut': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'statut',
       type: IsarType.long,
     ),
     r'variantTypes': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'variantTypes',
       type: IsarType.stringList,
     ),
     r'variantWords': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'variantWords',
       type: IsarType.stringList,
     ),
     r'word': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'word',
       type: IsarType.string,
     )
@@ -88,7 +93,20 @@ int _termEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.langage.length * 3;
   bytesCount += 3 + object.partOfSpeech.length * 3;
-  bytesCount += 3 + object.simplified.length * 3;
+  bytesCount += 3 + object.simplifiedAndMasculinizedWordsU.length * 3;
+  {
+    for (var i = 0; i < object.simplifiedAndMasculinizedWordsU.length; i++) {
+      final value = object.simplifiedAndMasculinizedWordsU[i];
+      bytesCount += value.length * 3;
+    }
+  }
+  bytesCount += 3 + object.simplifiedWordsU.length * 3;
+  {
+    for (var i = 0; i < object.simplifiedWordsU.length; i++) {
+      final value = object.simplifiedWordsU[i];
+      bytesCount += value.length * 3;
+    }
+  }
   bytesCount += 3 + object.variantTypes.length * 3;
   {
     for (var i = 0; i < object.variantTypes.length; i++) {
@@ -116,11 +134,12 @@ void _termSerialize(
   writer.writeLong(offsets[0], object.hashCode);
   writer.writeString(offsets[1], object.langage);
   writer.writeString(offsets[2], object.partOfSpeech);
-  writer.writeString(offsets[3], object.simplified);
-  writer.writeLong(offsets[4], object.statut);
-  writer.writeStringList(offsets[5], object.variantTypes);
-  writer.writeStringList(offsets[6], object.variantWords);
-  writer.writeString(offsets[7], object.word);
+  writer.writeStringList(offsets[3], object.simplifiedAndMasculinizedWordsU);
+  writer.writeStringList(offsets[4], object.simplifiedWordsU);
+  writer.writeLong(offsets[5], object.statut);
+  writer.writeStringList(offsets[6], object.variantTypes);
+  writer.writeStringList(offsets[7], object.variantWords);
+  writer.writeString(offsets[8], object.word);
 }
 
 Term _termDeserialize(
@@ -130,10 +149,10 @@ Term _termDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Term(
-    reader.readLong(offsets[4]),
-    reader.readString(offsets[7]),
-    reader.readStringList(offsets[5]) ?? [],
+    reader.readLong(offsets[5]),
+    reader.readString(offsets[8]),
     reader.readStringList(offsets[6]) ?? [],
+    reader.readStringList(offsets[7]) ?? [],
     reader.readString(offsets[2]),
     langage: reader.readStringOrNull(offsets[1]) ?? "fr",
   );
@@ -155,14 +174,16 @@ P _termDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
-    case 4:
-      return (reader.readLong(offset)) as P;
-    case 5:
       return (reader.readStringList(offset) ?? []) as P;
+    case 4:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 5:
+      return (reader.readLong(offset)) as P;
     case 6:
       return (reader.readStringList(offset) ?? []) as P;
     case 7:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -620,20 +641,22 @@ extension TermQueryFilter on QueryBuilder<Term, Term, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedEqualTo(
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUElementEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'simplified',
+        property: r'simplifiedAndMasculinizedWordsU',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedGreaterThan(
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUElementGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -641,14 +664,15 @@ extension TermQueryFilter on QueryBuilder<Term, Term, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'simplified',
+        property: r'simplifiedAndMasculinizedWordsU',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedLessThan(
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUElementLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -656,14 +680,15 @@ extension TermQueryFilter on QueryBuilder<Term, Term, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'simplified',
+        property: r'simplifiedAndMasculinizedWordsU',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedBetween(
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUElementBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -672,7 +697,7 @@ extension TermQueryFilter on QueryBuilder<Term, Term, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'simplified',
+        property: r'simplifiedAndMasculinizedWordsU',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -682,71 +707,388 @@ extension TermQueryFilter on QueryBuilder<Term, Term, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedStartsWith(
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUElementStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'simplified',
+        property: r'simplifiedAndMasculinizedWordsU',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedEndsWith(
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUElementEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'simplified',
+        property: r'simplifiedAndMasculinizedWordsU',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUElementContains(String value,
+          {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'simplified',
+        property: r'simplifiedAndMasculinizedWordsU',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUElementMatches(String pattern,
+          {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'simplified',
+        property: r'simplifiedAndMasculinizedWordsU',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedIsEmpty() {
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUElementIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'simplified',
+        property: r'simplifiedAndMasculinizedWordsU',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedIsNotEmpty() {
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUElementIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'simplified',
+        property: r'simplifiedAndMasculinizedWordsU',
         value: '',
       ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsULengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedAndMasculinizedWordsU',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedAndMasculinizedWordsU',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsUIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedAndMasculinizedWordsU',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsULengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedAndMasculinizedWordsU',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsULengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedAndMasculinizedWordsU',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedAndMasculinizedWordsULengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedAndMasculinizedWordsU',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsUElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'simplifiedWordsU',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsUElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'simplifiedWordsU',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsUElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'simplifiedWordsU',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsUElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'simplifiedWordsU',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsUElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'simplifiedWordsU',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsUElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'simplifiedWordsU',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsUElementContains(String value,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'simplifiedWordsU',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsUElementMatches(String pattern,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'simplifiedWordsU',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsUElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'simplifiedWordsU',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsUElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'simplifiedWordsU',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedWordsULengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedWordsU',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedWordsUIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedWordsU',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedWordsUIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedWordsU',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsULengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedWordsU',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition>
+      simplifiedWordsULengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedWordsU',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Term, Term, QAfterFilterCondition> simplifiedWordsULengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'simplifiedWordsU',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
@@ -1417,18 +1759,6 @@ extension TermQuerySortBy on QueryBuilder<Term, Term, QSortBy> {
     });
   }
 
-  QueryBuilder<Term, Term, QAfterSortBy> sortBySimplified() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'simplified', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Term, Term, QAfterSortBy> sortBySimplifiedDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'simplified', Sort.desc);
-    });
-  }
-
   QueryBuilder<Term, Term, QAfterSortBy> sortByStatut() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'statut', Sort.asc);
@@ -1503,18 +1833,6 @@ extension TermQuerySortThenBy on QueryBuilder<Term, Term, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Term, Term, QAfterSortBy> thenBySimplified() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'simplified', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Term, Term, QAfterSortBy> thenBySimplifiedDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'simplified', Sort.desc);
-    });
-  }
-
   QueryBuilder<Term, Term, QAfterSortBy> thenByStatut() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'statut', Sort.asc);
@@ -1561,10 +1879,16 @@ extension TermQueryWhereDistinct on QueryBuilder<Term, Term, QDistinct> {
     });
   }
 
-  QueryBuilder<Term, Term, QDistinct> distinctBySimplified(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Term, Term, QDistinct>
+      distinctBySimplifiedAndMasculinizedWordsU() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'simplified', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'simplifiedAndMasculinizedWordsU');
+    });
+  }
+
+  QueryBuilder<Term, Term, QDistinct> distinctBySimplifiedWordsU() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'simplifiedWordsU');
     });
   }
 
@@ -1619,9 +1943,17 @@ extension TermQueryProperty on QueryBuilder<Term, Term, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Term, String, QQueryOperations> simplifiedProperty() {
+  QueryBuilder<Term, List<String>, QQueryOperations>
+      simplifiedAndMasculinizedWordsUProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'simplified');
+      return query.addPropertyName(r'simplifiedAndMasculinizedWordsU');
+    });
+  }
+
+  QueryBuilder<Term, List<String>, QQueryOperations>
+      simplifiedWordsUProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'simplifiedWordsU');
     });
   }
 

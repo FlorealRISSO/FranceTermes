@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../themes/theme_constants.dart';
 
 abstract class ArticleTermField extends StatelessWidget {
@@ -11,7 +11,7 @@ abstract class ArticleTermField extends StatelessWidget {
       final list = <InlineSpan>[];
       for (final secondary in secondaries) {
         list.add(TextSpan(
-          text: " ou ",
+          text: " ${AppLocalizations.of(context)!.or} ",
           style: TextStyle(
             color: ThemeConstants.actionsColor(context),
             fontSize: ThemeConstants.textSizeDefault,

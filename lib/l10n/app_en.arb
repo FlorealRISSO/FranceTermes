@@ -142,5 +142,9 @@
     "dateInformation" : "Official Journal of",
     "@dateInformation" : {
         "description": "the text that explains the date"
+    },
+    "or" : "or",
+    "@orInformation" : {
+        "description" : "the word or"
     }
 }

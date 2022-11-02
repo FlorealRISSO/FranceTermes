@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:france_termes/providers/data_provider.dart';
 import 'package:france_termes/tool/extension.dart';
@@ -5,7 +7,6 @@ import 'package:france_termes/tool/extension.dart';
 import '../models/article.dart';
 import '../models/domain.dart';
 import '../models/term.dart';
-import 'article_preview/article_preview.dart';
 import 'article_preview/article_result_preview.dart';
 
 class TermResearch extends SearchDelegate {
@@ -72,7 +73,7 @@ class TermResearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    final String simplifiedQuery = query.removeDiacritics();
+    final String simplifiedQuery = query.toUpperAscii();
     return FutureBuilder(
         future: provider.searchArticles(simplifiedQuery),
         builder: ((context, snapshot) {
@@ -98,20 +99,24 @@ class TermResearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final String simplifiedQuery = query.removeDiacritics();
+    final String simplifiedQuery = query.toUpperAscii();
 
     return FutureBuilder(
         future: provider.searchWords(simplifiedQuery),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             List<Term> terms = snapshot.requireData as List<Term>;
+            Set<String> allTerms = {};
+            for (final term in terms) {
+              allTerms.addAll(term.wordsStartWith(simplifiedQuery));
+            }
             _widgetSuggestions = ListView.builder(
-              itemCount: terms.length,
+              itemCount: allTerms.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  title: Text(terms[index].word),
+                  title: Text(allTerms.elementAt(index)),
                   onTap: () {
-                    query = terms[index].word;
+                    query = allTerms.elementAt(index);
                     showResults(context);
                   },
                 );
@@ -119,9 +124,10 @@ class TermResearch extends SearchDelegate {
             );
             return _widgetSuggestions!;
           } else if (snapshot.hasError) {
-            return const Text("Error...");
+            return const Center(child: Text("Error..."));
           } else {
-            return _widgetSuggestions ?? const CircularProgressIndicator();
+            return _widgetSuggestions ??
+                const Center(child: CircularProgressIndicator());
           }
         }));
   }

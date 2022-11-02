@@ -30,16 +30,13 @@ class Term {
     return word.replaceAll(regExpPartOfSpeech, "");
   }
 
+  static String masculinizeWord(String word) {
+    return word.replaceAll(regExpFeminin, "");
+  }
+
   Term(this.statut, this.word, this.variantTypes, this.variantWords,
       this.partOfSpeech,
       {this.langage = "fr"});
-
-  String get simplified => simplify();
-
-  String simplify() {
-    final String simplified = word.replaceAll(regExpFeminin, "");
-    return simplified.removeDiacritics();
-  }
 
   String toStrVariants() {
     StringBuffer buffer = StringBuffer();
@@ -70,11 +67,36 @@ class Term {
       word.hashCode ^
       langage.hashCode;
 
+  List<String> get simplifiedWordsU => _getSimplifiedWordsU();
+
+  List<String> get simplifiedAndMasculinizedWordsU =>
+      _getSimplifiedAndMasculinizedWordsU();
+
+  List<String> _getSimplifiedWordsU() {
+    List<String> result = [];
+    result.add(word.toUpperAscii());
+    for (final variant in variantWords) {
+      result.add(variant.toUpperAscii());
+    }
+    return result;
+  }
+
+  List<String> _getSimplifiedAndMasculinizedWordsU() {
+    List<String> result = [];
+    result.add(masculinizeWord(word).toUpperAscii());
+    for (final variant in variantWords) {
+      result.add(masculinizeWord(variant)
+          .replaceAll(regExpFeminin, "")
+          .toUpperAscii());
+    }
+    return result;
+  }
+
   List<String> variantsStartWith(String query) {
     List<String> words = [];
     for (final variant in variantWords) {
-      String simplifiedVariant = variant.removeDiacritics();
-      if (simplifiedVariant.startsWithUnsensitive(query)) {
+      if (variant.startsWithUAscii(query) ||
+          masculinizeWord(variant).startsWithUAscii(query)) {
         words.add(variant);
       }
     }
@@ -83,7 +105,8 @@ class Term {
 
   List<String> wordsStartWith(String query) {
     List<String> words = [];
-    if (word.startsWithUnsensitive(query)) {
+    if (word.startsWithUAscii(query) ||
+        masculinizeWord(word).startsWithUAscii(query)) {
       words.add(word);
     }
     words.addAll(variantsStartWith(query));
