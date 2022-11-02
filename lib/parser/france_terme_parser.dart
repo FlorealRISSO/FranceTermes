@@ -43,8 +43,8 @@ class XmlConstants {
   static const String warning = "Attention";
   static const String toQuestion = "A-interroger";
   static const String defaultLang = "fr";
-  static const String subDomainField =
-      "<S-dom"; // TODO: Add a way to parse subdomains
+  static const String subDomainField = "<S-dom";
+  static const String url = "url";
 }
 
 class TermeParser {
@@ -69,32 +69,34 @@ class TermeParser {
     return xmlArticle.getElement(XmlConstants.toQuestion)?.text ?? "";
   }
 
-  String parseUrl(String url) {
+  parseUrl(String? url, List<int> toSee) {
+    if (url == null) return;
     final RegExp regex = RegExp(r"(([0-9])[0-9]*)");
-    return regex.firstMatch(url)?[0] ?? "";
+    String? strId = regex.firstMatch(url)?[0];
+    if (strId == null) return;
+    int? id = int.tryParse(strId);
+    if (id == null) return;
+    toSee.add(id);
   }
 
   /// There are two kinds of "to see" elements,
   /// the first is in the field <Voir></Voir>
   /// the second is in <Terme> when the attribute statut="antonyme" there is the attribute url...
-  List<int> parseToSee(XmlElement xmlArticle) {
+  void parseToSee(XmlElement xmlArticle, List<int> toSee) {
     final List<int> toSee = [];
     for (final XmlElement elements
         in xmlArticle.findAllElements(XmlConstants.toSee)) {
       for (final XmlElement element
           in elements.findAllElements(XmlConstants.toSeeIndividual)) {
         String? url = element.getAttribute(XmlConstants.toSeeAttribute);
-        if (url != null) {
-          toSee.add(int.parse(parseUrl(url)));
-        }
+        parseUrl(url, toSee);
       }
     }
-    return toSee;
   }
 
-  Metadata parseMetadata(XmlElement xmlArticle) {
+  Metadata parseMetadata(XmlElement xmlArticle, List<int> toSee) {
     final String notes = parseNotes(xmlArticle);
-    final List<int> toSee = parseToSee(xmlArticle);
+    parseToSee(xmlArticle, toSee);
     final String toQuestion = parseToQuestion(xmlArticle);
     final warning = parseWarning(xmlArticle);
     return Metadata(notes, "", warning, toQuestion, toSee);
@@ -182,19 +184,25 @@ class TermeParser {
     }
   }
 
-  Term parseTerm(XmlElement xmlTerm) {
+  void parseAntonymTooSee(XmlElement xmlAntonymn, List<int> toSee) {
+    String? url = xmlAntonymn.getAttribute(XmlConstants.url);
+    parseUrl(url, toSee);
+  }
+
+  Term parseTerm(XmlElement xmlTerm, List<int> toSee) {
     final String word = parseTermWord(xmlTerm);
     final int statut =
         Statut.fromStr(xmlTerm.getAttribute(XmlConstants.statut)!);
+    if (statut == Statut.iAntonyme) parseAntonymTooSee(xmlTerm, toSee);
     final String partOfSpeech =
         xmlTerm.getAttribute(XmlConstants.termPartOfSpeech) ?? "";
     final TupleVariants variants = parseTermVariants(xmlTerm);
     return Term(statut, word, variants.item1, variants.item2, partOfSpeech);
   }
 
-  parseTerms(XmlElement xmlArticle, List<Term> terms) {
+  parseTerms(XmlElement xmlArticle, List<Term> terms, List<int> toSee) {
     for (final xmlTerm in xmlArticle.findAllElements(XmlConstants.termField)) {
-      final Term term = parseTerm(xmlTerm);
+      final Term term = parseTerm(xmlTerm, toSee);
       terms.add(term);
     }
   }
@@ -229,10 +237,10 @@ class TermeParser {
     }
   }
 
-  List<Term> parseAllTerms(XmlElement xmlArticle) {
+  List<Term> parseAllTerms(XmlElement xmlArticle, List<int> toSee) {
     List<Term> terms = [];
     parseEquivalent(xmlArticle, terms);
-    parseTerms(xmlArticle, terms);
+    parseTerms(xmlArticle, terms, toSee);
     return terms;
   }
 
@@ -254,8 +262,9 @@ class TermeParser {
     final List<Domain> domains = [];
     final List<SubDomain> subDomains = [];
     parseDomaines(xmlArticle, domains, subDomains);
-    final Metadata articleMetadata = parseMetadata(xmlArticle);
-    final List<Term> terms = parseAllTerms(xmlArticle);
+    final List<int> toSee = [];
+    final Metadata articleMetadata = parseMetadata(xmlArticle, toSee);
+    final List<Term> terms = parseAllTerms(xmlArticle, toSee);
     final String definition = parseDefinition(xmlArticle);
     final article = Article(
         articleId,
