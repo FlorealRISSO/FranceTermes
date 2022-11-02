@@ -1,7 +1,7 @@
+import 'package:france_termes/tool/extension.dart';
 import 'package:isar/isar.dart';
 import 'package:collection/collection.dart';
 import 'article.dart';
-import 'package:diacritic/diacritic.dart' as diacritic;
 part 'term.g.dart';
 
 @Collection()
@@ -38,7 +38,7 @@ class Term {
 
   String simplify() {
     final String simplified = word.replaceAll(regExpFeminin, "");
-    return diacritic.removeDiacritics(simplified);
+    return simplified.removeDiacritics();
   }
 
   String toStrVariants() {
@@ -69,4 +69,24 @@ class Term {
       partOfSpeech.hashCode ^
       word.hashCode ^
       langage.hashCode;
+
+  List<String> variantsStartWith(String query) {
+    List<String> words = [];
+    for (final variant in variantWords) {
+      String simplifiedVariant = variant.removeDiacritics();
+      if (simplifiedVariant.startsWithUnsensitive(query)) {
+        words.add(variant);
+      }
+    }
+    return words;
+  }
+
+  List<String> wordsStartWith(String query) {
+    List<String> words = [];
+    if (word.startsWithUnsensitive(query)) {
+      words.add(word);
+    }
+    words.addAll(variantsStartWith(query));
+    return words;
+  }
 }

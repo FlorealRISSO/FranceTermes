@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:france_termes/providers/data_provider.dart';
-import 'package:diacritic/diacritic.dart' as diacritic;
+import 'package:france_termes/tool/extension.dart';
 
 import '../models/article.dart';
 import '../models/domain.dart';
 import '../models/term.dart';
 import 'article_preview/article_preview.dart';
+import 'article_preview/article_result_preview.dart';
 
 class TermResearch extends SearchDelegate {
   DataProvider provider;
@@ -71,7 +72,7 @@ class TermResearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    final String simplifiedQuery = diacritic.removeDiacritics(query);
+    final String simplifiedQuery = query.removeDiacritics();
     return FutureBuilder(
         future: provider.searchArticles(simplifiedQuery),
         builder: ((context, snapshot) {
@@ -80,7 +81,10 @@ class TermResearch extends SearchDelegate {
             _widgetSuggestions = ListView.builder(
               itemCount: articles.length,
               itemBuilder: (BuildContext context, int index) {
-                return ArticlePreview(articles[index], provider);
+                return ArticleResultPreview(
+                    article: articles[index],
+                    provider: provider,
+                    query: simplifiedQuery);
               },
             );
             return _widgetSuggestions!;
@@ -94,7 +98,7 @@ class TermResearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final String simplifiedQuery = diacritic.removeDiacritics(query);
+    final String simplifiedQuery = query.removeDiacritics();
 
     return FutureBuilder(
         future: provider.searchWords(simplifiedQuery),

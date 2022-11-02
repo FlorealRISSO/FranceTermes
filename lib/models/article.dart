@@ -31,6 +31,15 @@ class Article {
   Article(this.id, this.numero, this.date, this.definition, this.toSeeId,
       this.notes, this.source, this.warning, this.toQuestion);
 
+  // List<String> termsStartWith(String query) {
+  //   List<String> termsStartWith = [];
+  //   for (final term in terms) {
+  //     List<String> termStartWith = term.startWith(query);
+  //     termsStartWith.addAll(termStartWith);
+  //   }
+  //   return termsStartWith;
+  // }
+
   @override
   String toString() {
     return 'Article{id: $id, numero: $numero, date: $date, metadata: $notes, definition: $definition, url : $baseUrl$numero}';

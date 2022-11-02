@@ -19,6 +19,7 @@ class DarkConstants {
 class ThemeConstants {
   static const double textSizeDefault = 20;
   static const double textSizeInformation = 15;
+  static const double cardPadding = 8;
   static const TextStyle textStyleDefault = TextStyle(
     fontSize: textSizeDefault,
   );

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:france_termes/widgets/themes/theme_constants.dart';
+import 'article_term_field.dart';
 
-import '../../../models/term.dart';
+class ArticlePrivilegedTextField extends ArticleTermField {
+  final String principal;
+  final List<String>? secondaries;
 
-class ArticlePrivilegedTextField extends StatelessWidget {
-  final Term term;
-  const ArticlePrivilegedTextField(this.term, {Key? key}) : super(key: key);
+  const ArticlePrivilegedTextField(
+      {Key? key, required this.principal, this.secondaries})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final TextStyle principalStyle = TextStyle(
@@ -15,8 +19,9 @@ class ArticlePrivilegedTextField extends StatelessWidget {
     );
     return RichText(
       text: TextSpan(
-        text: term.word,
+        text: principal,
         style: principalStyle,
+        children: buildSecondaries(context, secondaries),
       ),
     );
   }
