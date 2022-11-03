@@ -22,19 +22,35 @@ Il s'agit donc d'une application pour téléphone permettant de lire la base de 
 ## Description de l'application
 
 Découvrez, cherchez et explorez les nouveaux termes de la langue française !
-Régulièrement, la "Commission d'enrichissement de la langue française" invente de nouveaux mots pour nommer en français les réalités nouvelles et les innovations scientifiques et techniques, dans cette application vous retrouverez l'ensemble de ces nouveaux termes.
+
+Avec l'application France Termes accédez aux termes recommandés au Journal officiel de la République française par la Commission d'enrichissement de la langue française. Ces termes sont proposés par les experts de nombreux domaines spécialisés (économie et finances, environnement, santé, sports, culture, informatique, défense, transports...) qui participent au dispositif officiel d’enrichissement de la langue française.Régulièrement la "Commission d'enrichissement de la langue française" invente de nouveaux termes pour nommer en français les réalités nouvelles et les innovations scientifiques et techniques. Retrouvez l’ensemble de ces nouveaux termes dans l’application.
 
 Fonctionnalités:
 
 - Recherche de mots;
-- onglet nouveauté, permettant de découvrir les nouveaux termes ajoutés;
+- recherche par domaine;
+- onglet nouveautés, permettant de découvrir les nouveaux termes ajoutés;
 - onglet découvrir, permettant de découvrir des termes aléatoirement;
 - fonctionnement hors-ligne;
-- transformation des articles en image et ainsi que le lien de chacun d'entre eux vers le site officiel de France Terme;
+- transformation des articles en image et ainsi que le lien de chacun d'entre eux vers le site officiel de FranceTerme;
 - Recherche de mise à jour automatique.
 
 Information :
 Les données utilisées par l'application sont fournies par le ministère de la culture français dans le cadre du programme de données ouvertes. Cette application est une proposition de réutilisation de ces données.
+
+## Nouveautés de la version 2.0.0
+
+La version 2.0.0 apporte un grand lot de nouvelle fonctionnalité ainsi que de correctifs, voici une liste non exhaustive :
+
+- Correction des fautes d'orthographe;
+- amélioration de la présentation des données;
+- ajout du deuxième nom de domaine;
+- ajout des sous-noms de domaine;
+- ajout de la recherche par nom de domaine;
+- simplification de l'affichage de certains termes;
+- amélioration du moteur de recherche;
+- mise à jour des dépendances;
+- et bien plus.
 
 ## Captures d'écran
 

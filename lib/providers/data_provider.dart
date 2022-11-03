@@ -83,7 +83,7 @@ class DataProvider {
     Isar isar = Isar.openSync(
         [ArticleSchema, TermSchema, DomainSchema, SubDomainSchema],
         directory: (await getApplicationDocumentsDirectory()).path,
-        inspector: true);
+        inspector: false);
     return isar;
   }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:france_termes/providers/data_provider.dart';
-import 'package:france_termes/providers/shared_preferences_provider.dart';
 import 'package:france_termes/widgets/default_app_bar.dart';
 import 'package:france_termes/widgets/france_term_text.dart';
 import 'package:france_termes/widgets/page/information_page.dart';

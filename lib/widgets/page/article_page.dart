@@ -73,8 +73,7 @@ class ArticlePage extends StatelessWidget {
           }
           List<Widget> articlesW = [
             Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
                 child: Text(AppLocalizations.of(context)!.seeAlso)),
           ];
 
@@ -83,8 +82,7 @@ class ArticlePage extends StatelessWidget {
           }
           return Column(children: articlesW);
         } else if (snapshot.hasError) {
-          return Text(
-              AppLocalizations.of(context)!.errorMessage); //TODO: change it...
+          return Text(AppLocalizations.of(context)!.errorMessage);
         } else {
           return Center(
               child: ThemeConstants.coloredCircularProgressIndicator(context));

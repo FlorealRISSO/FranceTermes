@@ -22,19 +22,35 @@ It is a phone application to read the France Terme database, it can be used to d
 ## Description of the application
 
 Discover, search and explore the new terms of the French language!
-Regularly, the "Commission d'enrichissement de la langue française" invents new words to name in French new realities and scientific and technical innovations, in this application you will find all these new terms.
+
+With the France Termes application, access the terms recommended in the Official Journal of the French Republic by the Commission for the Enrichment of the French Language. These terms are proposed by experts in many specialized fields (economy and finance, environment, health, sports, culture, information technology, defense, transportation...) who participate in the official system of enrichment of the French language. The "Commission d'enrichissement de la langue française" regularly invents new terms to name in French new realities and scientific and technical innovations. Find all these new terms in the application.
 
 Features:
 
 - Word search;
+- search by domain;
 - tab new, allowing to discover the new added terms;
 - discover tab, allowing to discover terms randomly;
 - offline operation;
-- transformation of the articles into images and the link of each of them to the official site of France Terme;
+- transformation of the articles into images and the link of each of them to the official site of FranceTerme;
 - Automatic update search.
 
 Information :
-The data used by the application are provided by the French Ministry of Culture as part of the open data program. This application is a proposal to reuse these data.
+The data used by the application is provided by the French Ministry of Culture as part of the open data program. This application is a proposal to reuse these data.
+
+## News in version 2.0.0
+
+Version 2.0.0 brings a lot of new features and fixes, here is a non-exhaustive list:
+
+- Correction of spelling mistakes;
+- improvement of the presentation of the data;
+- addition of the second domain name;
+- addition of sub-domain names;
+- addition of the search by domain name;
+- simplification of the display of some terms;
+- improvement of the search engine;
+- updated dependencies;
+- and much more.
 
 ## Screenshots
 

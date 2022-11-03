@@ -65,7 +65,7 @@ class _LauncherState extends State<Launcher> {
           if (snapshot.hasData) {
             final Tuple2<bool, DateTime> dateInformations =
                 snapshot.requireData as Tuple2<bool, DateTime>;
-            final bool isInit = /*false;*/ dataProvider.isInitInOkVersion();
+            final bool isInit = dataProvider.isInitInOkVersion();
             if (dateInformations.item1) {
               return FutureUpdate(dataProvider, dateInformations.item2);
             } else if (!isInit) {
