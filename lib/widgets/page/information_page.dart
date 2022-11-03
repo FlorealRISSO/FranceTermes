@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,6 +18,7 @@ Mail : contact@flris.fr
   static const String _dataset =
       "https://data.culture.gouv.fr/explore/dataset/base-franceterme-termes-scientifiques-et-techniques/information/";
   static const String _website = "http://www.culture.fr/franceterme";
+  static const double _buttonFontSize = 15;
   _setClipboard(BuildContext context, String text, String message) {
     Clipboard.setData(ClipboardData(text: text)).then((value) => {
           ScaffoldMessenger.of(context)
@@ -55,25 +57,50 @@ Mail : contact@flris.fr
           ),
           ListTile(
               title: TextButton(
+                  style: TextButton.styleFrom(
+                      backgroundColor:
+                          ThemeConstants.itemDefaultColor(context)),
                   onPressed: (() =>
                       _setClipboard(context, _gitUrl, urlMessage)),
-                  child: Text(textProvider.sourceCode))),
+                  child: Text(textProvider.sourceCode,
+                      style: TextStyle(
+                          color: ThemeConstants.actionsColor(context),
+                          fontSize: _buttonFontSize)))),
           ListTile(
             title: TextButton(
+              style: TextButton.styleFrom(
+                  backgroundColor: ThemeConstants.itemDefaultColor(context)),
               onPressed: (() => _setClipboard(context, _mail, mailMessage)),
-              child: const Text("Mail"),
+              child: Text("Mail",
+                  style: TextStyle(
+                      color: ThemeConstants.actionsColor(context),
+                      fontSize: _buttonFontSize)),
             ),
           ),
           ListTile(
             title: TextButton(
+              style: TextButton.styleFrom(
+                  backgroundColor: ThemeConstants.itemDefaultColor(context)),
               onPressed: (() => _setClipboard(context, _dataset, urlMessage)),
-              child: Text(textProvider.dataset),
+              child: Text(
+                textProvider.dataset,
+                style: TextStyle(
+                    color: ThemeConstants.actionsColor(context),
+                    fontSize: _buttonFontSize),
+              ),
             ),
           ),
           ListTile(
             title: TextButton(
+              style: TextButton.styleFrom(
+                  backgroundColor: ThemeConstants.itemDefaultColor(context)),
               onPressed: (() => _setClipboard(context, _website, urlMessage)),
-              child: Text(textProvider.website),
+              child: Text(
+                textProvider.website,
+                style: TextStyle(
+                    color: ThemeConstants.actionsColor(context),
+                    fontSize: _buttonFontSize),
+              ),
             ),
           )
         ],

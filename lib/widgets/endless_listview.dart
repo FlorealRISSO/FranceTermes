@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:france_termes/providers/data_provider.dart';
 import 'package:france_termes/widgets/article_preview/article_preview.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 
 import '../models/article.dart';
 
@@ -62,7 +63,9 @@ class StateEndlessListview extends State<EndlessListview> {
               children: _buildChildren(),
             );
           } else {
-            return const CircularProgressIndicator();
+            return Center(
+                child:
+                    ThemeConstants.coloredCircularProgressIndicator(context));
           }
         });
   }

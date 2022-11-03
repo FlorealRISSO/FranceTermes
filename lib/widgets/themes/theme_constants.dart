@@ -80,4 +80,12 @@ class ThemeConstants {
         ? LightConstants.articleInternalCardColor
         : DarkConstants.articleInternalCardColor;
   }
+
+  static Widget coloredCircularProgressIndicator(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(
+        color: actionsColor(context),
+      ),
+    );
+  }
 }

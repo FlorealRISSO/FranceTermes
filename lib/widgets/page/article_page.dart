@@ -86,7 +86,8 @@ class ArticlePage extends StatelessWidget {
           return Text(
               AppLocalizations.of(context)!.errorMessage); //TODO: change it...
         } else {
-          return const CircularProgressIndicator();
+          return Center(
+              child: ThemeConstants.coloredCircularProgressIndicator(context));
         }
       },
     );

@@ -14,12 +14,14 @@ class ArticlePreview extends ArticleAbstractPreview {
 
   @override
   Widget build(BuildContext context) {
+    String? field =
+        article.fields.isNotEmpty ? article.fields.first.field : null;
     return ListTile(
         onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ArticlePage(article, provider))),
-        title: ArticlePreviewCard(children: buildChildren(article)));
+        title: ArticlePreviewCard(children: buildChildren(article, field)));
   }
 
   @override

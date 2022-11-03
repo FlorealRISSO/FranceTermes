@@ -23,9 +23,12 @@ extension DateOnlyCompare on DateTime {
 class DataProvider {
   static const int _minArticles = 7000;
   static const int _appVersion = 2;
+  static const int _newArticles = 50;
+  static const int _minDate = 2010;
   final Isar isar;
   final SharedPreferencesProvider peferencesProvider;
   int? articlesSize;
+  List<String> domains = [];
 
   DataProvider(this.isar, this.peferencesProvider);
 
@@ -98,6 +101,34 @@ class DataProvider {
     return true;
   }
 
+  List<Article> _getExistingArticles(List<Article?> articles) {
+    final List<Article> result = [];
+    for (final article in articles) {
+      if (article != null) {
+        result.add(article);
+      }
+    }
+    return result;
+  }
+
+  Future<List<Article>> _loadUniqueArticles(List<Article> articles) async {
+    for (final Article article in articles) {
+      await article.terms.load();
+      await article.fields.load();
+      await article.subFields.load();
+    }
+    return articles;
+  }
+
+  Future<List<Article>> _loadUniqueArticlesFromTerm(List<Term> terms) async {
+    Set<Article> articles = {};
+    for (final Term term in terms) {
+      await term.article.load();
+      articles.add(term.article.value!);
+    }
+    return _loadUniqueArticles(articles.toList());
+  }
+
   Future<List<Term>> searchWords(String query) async {
     final List<Term> terms = await isar.terms
         .filter()
@@ -109,40 +140,38 @@ class DataProvider {
     return terms;
   }
 
-  Future<List<Article>> searchArticles(String query) async {
+  Future<List<Term>> searchWordsWithFields(String query, String field) async {
     final List<Term> terms = await isar.terms
         .filter()
-        .simplifiedWordsUElementStartsWith(query, caseSensitive: false)
-        .or()
-        .simplifiedAndMasculinizedWordsUElementStartsWith(query,
-            caseSensitive: false)
+        .article((a) => a.fields((f) => f.fieldStartsWith(field)))
+        .group((t) => t
+            .simplifiedWordsUElementStartsWith(query, caseSensitive: false)
+            .or()
+            .simplifiedAndMasculinizedWordsUElementStartsWith(query,
+                caseSensitive: false))
         .findAll();
-    Set<Article> articles = {};
-    for (final Term term in terms) {
-      await term.article.load();
-      articles.add(term.article.value!);
-    }
-    for (final Article article in articles) {
-      await article.terms.load();
-      await article.fields.load();
-      await article.subFields.load();
-    }
-    return articles.toList();
+    return terms;
+  }
+
+  Future<List<Article>> searchArticlesWithFields(
+      String query, String field) async {
+    final List<Term> terms = await searchWordsWithFields(query, field);
+    return _loadUniqueArticlesFromTerm(terms);
+  }
+
+  Future<List<Article>> searchArticles(String query) async {
+    final List<Term> terms = await searchWords(query);
+    return _loadUniqueArticlesFromTerm(terms);
   }
 
   Future<List<Article>> getNewArticles(int number) async {
     final List<Article> articles = await isar.articles
         .filter()
-        .dateGreaterThan(DateTime(2010))
+        .dateGreaterThan(DateTime(_minDate))
         .sortByDateDesc()
-        .limit(20)
+        .limit(_newArticles)
         .findAll();
-    for (final Article article in articles) {
-      await article.terms.load();
-      await article.fields.load();
-      await article.subFields.load();
-    }
-    return articles;
+    return _loadUniqueArticles(articles);
   }
 
   // Attention, this function will not return n items, most of the time there will be an n*0.75.
@@ -154,31 +183,15 @@ class DataProvider {
     for (int i = 0; i < number; i++) {
       index.add(generator.nextInt(articlesSize! - 1));
     }
-    final List<Article?> nullArticles = await isar.articles.getAll(index);
-    final List<Article> resultArticles = [];
-    for (final Article? article in nullArticles) {
-      if (article != null) {
-        await article.terms.load();
-        await article.fields.load();
-        await article.subFields.load();
-        resultArticles.add(article);
-      }
-    }
-    return resultArticles;
+    final List<Article?> possibleArticles = await isar.articles.getAll(index);
+    final List<Article> resultArticles = _getExistingArticles(possibleArticles);
+    return _loadUniqueArticles(resultArticles);
   }
 
   Future<List<Article>> getArticles(List<int> index) async {
     List<Article?> possibleArticles = await isar.articles.getAll(index);
-    List<Article> articles = [];
-    for (Article? article in possibleArticles) {
-      if (article != null) {
-        await article.terms.load();
-        await article.fields.load();
-        await article.subFields.load();
-        articles.add(article);
-      }
-    }
-    return articles;
+    final List<Article> articles = _getExistingArticles(possibleArticles);
+    return _loadUniqueArticles(articles);
   }
 
   void _feed(List<Article> articles) {
@@ -212,15 +225,21 @@ class DataProvider {
     await update(articles);
   }
 
-  List<Domain> getDomains() {
+  List<String> getDomains() {
+    if (domains.length > 1) {
+      return domains;
+    }
     final domainsSize = isar.domains.countSync();
-    final List<Domain> domains = [];
-    for (var i = 0; i < domainsSize; i++) {
-      final domain = isar.domains.getSync(i);
+    //final List<String> domains = [];
+    final List<int> ids = [for (var i = 1; i <= domainsSize; i += 1) i];
+    final List<Domain?> possibleDomains = isar.domains.getAllSync(ids);
+    for (final domain in possibleDomains) {
       if (domain != null) {
-        domains.add(domain);
+        domains.add(domain.field);
       }
     }
+    domains.sort((d1, d2) => d1.compareTo(d2));
+    domains.insert(0, "Tous");
     return domains;
   }
 }

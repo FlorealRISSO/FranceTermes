@@ -10,7 +10,7 @@ import 'article_field/article_privileged_text_field.dart';
 abstract class ArticleAbstractPreview extends StatelessWidget {
   const ArticleAbstractPreview({Key? key}) : super(key: key);
 
-  List<Widget> buildChildren(Article article) {
+  List<Widget> buildChildren(Article article, String? field) {
     Term? equivalent;
     Term? privileged;
     for (Term term in article.terms) {
@@ -29,8 +29,8 @@ abstract class ArticleAbstractPreview extends StatelessWidget {
       children.add(ArticlePrivilegedTextField(
           principal: privileged.word, secondaries: matchVariants(privileged)));
     }
-    if (article.fields.isNotEmpty) {
-      children.add(ArticleDomainTextField(article.fields.first.field));
+    if (field != null) {
+      children.add(ArticleDomainTextField(field));
     }
     if (equivalent != null) {
       children.add(ArticleEquivalentTextField(

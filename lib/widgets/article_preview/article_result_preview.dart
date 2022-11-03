@@ -5,22 +5,21 @@ import '../../models/statut.dart';
 import '../../models/term.dart';
 import '../page/article_page.dart';
 import 'article_abstract_preview.dart';
-import 'article_field/article_domain_text_field.dart';
-import 'article_field/article_equivalent_text_field.dart';
 import 'article_field/article_preview_card.dart';
-import 'article_field/article_privileged_text_field.dart';
 
 class ArticleResultPreview extends ArticleAbstractPreview {
   const ArticleResultPreview(
       {Key? key,
       required this.query,
       required this.article,
-      required this.provider})
+      required this.provider,
+      required this.field})
       : super(key: key);
 
   final String query;
   final Article article;
   final DataProvider provider;
+  final String? field;
 
   List<String> _termWordsStartWith(Term term, String query) =>
       term.wordsStartWith(query);
@@ -81,11 +80,15 @@ class ArticleResultPreview extends ArticleAbstractPreview {
 
   @override
   Widget build(BuildContext context) {
+    String? fieldUsed = field ??
+        (article.fields.isNotEmpty ? article.fields.first.field : null);
+
     return ListTile(
         onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ArticlePage(article, provider))),
-        title: ArticlePreviewCard(children: super.buildChildren(article)));
+        title: ArticlePreviewCard(
+            children: super.buildChildren(article, fieldUsed)));
   }
 }

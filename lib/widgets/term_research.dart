@@ -1,55 +1,34 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:france_termes/providers/data_provider.dart';
 import 'package:france_termes/tool/extension.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 
 import '../models/article.dart';
-import '../models/domain.dart';
 import '../models/term.dart';
+import '../tool/mutable_pointer.dart';
 import 'article_preview/article_result_preview.dart';
+import 'field_drop_button.dart';
 
 class TermResearch extends SearchDelegate {
+  static const String all = "Tous";
   DataProvider provider;
-  late List<Domain> domains;
+
   TermResearch(this.provider);
-  Widget? _widgetSuggestions;
+
+  Widget? _widgetResults;
+  String? _lastQuery;
+  String? _lastField;
+
+  final MutablePointer<String> _selectedValue = MutablePointer(all);
   @override
   String get searchFieldLabel => "...";
 
-  /* => Ajout domain...
-  void onChange(setState, Domain? domain) => setState(() => _selected = domain);
-
-  Widget _buildAnnexe(context, setState) {
-    List<Widget> widgets = [
-      ListTile(
-          title: const Text('Aucun'),
-          leading: Radio<Domain>(
-              value: _empty,
-              groupValue: _selected,
-              onChanged: (Domain? value) => setState(() => _selected = value)))
-    ];
-    for (final domain in domains) {
-      widgets.add(ListTile(
-          title: Text(domain.field),
-          leading: Radio<Domain>(
-              value: domain,
-              groupValue: _selected,
-              onChanged: (Domain? value) =>
-                  setState(() => _selected = value))));
-    }
-    return SimpleDialog(
-        title: const Padding(
-            padding: EdgeInsets.only(bottom: 8), child: Text('Domaines: ')),
-        children: widgets);
+  bool hasChanged() {
+    return query != _lastQuery || _selectedValue.pointer != _lastField;
   }
 
-  StatefulBuilder buildRadio() {
-    return StatefulBuilder(
-        builder: (context, setState) => _buildAnnexe(context, setState));
-  }
-  */
-
+  //Ajout domain...
+  // -------------------
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -59,6 +38,11 @@ class TermResearch extends SearchDelegate {
           query = '';
           showSuggestions(context);
         },
+      ),
+      FieldDropButtun(
+        selectedValue: _selectedValue,
+        fields: provider.getDomains(),
+        unSelected: all,
       ),
     ];
   }
@@ -73,26 +57,42 @@ class TermResearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    if (!hasChanged()) {
+      return _widgetResults!;
+    }
     final String simplifiedQuery = query.toUpperAscii();
+    final String? fieldUsed =
+        _selectedValue.pointer == all ? null : _selectedValue.pointer;
+    final Future<List<Article>> Function() searchArticleMethod =
+        _selectedValue.pointer == all
+            ? () => provider.searchArticles(simplifiedQuery)
+            : () => provider.searchArticlesWithFields(
+                simplifiedQuery, _selectedValue.pointer);
     return FutureBuilder(
-        future: provider.searchArticles(simplifiedQuery),
+        future: searchArticleMethod(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             List<Article> articles = snapshot.requireData as List<Article>;
-            _widgetSuggestions = ListView.builder(
+            _widgetResults = ListView.builder(
               itemCount: articles.length,
               itemBuilder: (BuildContext context, int index) {
                 return ArticleResultPreview(
                     article: articles[index],
                     provider: provider,
-                    query: simplifiedQuery);
+                    query: simplifiedQuery,
+                    field: fieldUsed);
               },
             );
-            return _widgetSuggestions!;
+            _lastQuery = query;
+            _lastField = _selectedValue.pointer;
+            return _widgetResults!;
           } else if (snapshot.hasError) {
             return const Text("Error...");
           } else {
-            return _widgetSuggestions ?? const CircularProgressIndicator();
+            return //_widgetSuggestions ??
+                Center(
+              child: ThemeConstants.coloredCircularProgressIndicator(context),
+            );
           }
         }));
   }
@@ -100,9 +100,12 @@ class TermResearch extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     final String simplifiedQuery = query.toUpperAscii();
-
+    final Future<List<Term>> searchWordsMethod = _selectedValue.pointer == all
+        ? provider.searchWords(simplifiedQuery)
+        : provider.searchWordsWithFields(
+            simplifiedQuery, _selectedValue.pointer);
     return FutureBuilder(
-        future: provider.searchWords(simplifiedQuery),
+        future: searchWordsMethod,
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             List<Term> terms = snapshot.requireData as List<Term>;
@@ -110,7 +113,7 @@ class TermResearch extends SearchDelegate {
             for (final term in terms) {
               allTerms.addAll(term.wordsStartWith(simplifiedQuery));
             }
-            _widgetSuggestions = ListView.builder(
+            Widget widgetSuggestions = ListView.builder(
               itemCount: allTerms.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
@@ -122,12 +125,13 @@ class TermResearch extends SearchDelegate {
                 );
               },
             );
-            return _widgetSuggestions!;
+            return widgetSuggestions;
           } else if (snapshot.hasError) {
             return const Center(child: Text("Error..."));
           } else {
-            return _widgetSuggestions ??
-                const Center(child: CircularProgressIndicator());
+            return Center(
+                child:
+                    ThemeConstants.coloredCircularProgressIndicator(context));
           }
         }));
   }

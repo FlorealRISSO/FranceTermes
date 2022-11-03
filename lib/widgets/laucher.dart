@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:france_termes/widgets/sliding_segmented_home.dart';
+import 'package:france_termes/widgets/themes/theme_constants.dart';
 import 'package:tuple/tuple.dart';
 import '../providers/data_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -76,7 +77,7 @@ class _LauncherState extends State<Launcher> {
             return Center(
                 child: Column(children: [
               Text(AppLocalizations.of(context)!.searchUpdate),
-              const CircularProgressIndicator()
+              ThemeConstants.coloredCircularProgressIndicator(context)
             ]));
           }
         }));
@@ -111,7 +112,7 @@ class FutureInit extends StatelessWidget {
             return Center(
               child: Column(children: [
                 Text(AppLocalizations.of(context)!.launchInformation),
-                const CircularProgressIndicator(),
+                ThemeConstants.coloredCircularProgressIndicator(context),
               ]),
             );
           }
@@ -143,7 +144,7 @@ class FutureUpdate extends StatelessWidget {
             return Center(
               child: Column(children: [
                 Text(AppLocalizations.of(context)!.updateInformation),
-                const CircularProgressIndicator(),
+                ThemeConstants.coloredCircularProgressIndicator(context),
               ]),
             );
           }

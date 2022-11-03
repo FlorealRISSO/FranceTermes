@@ -42,7 +42,7 @@ class _SlidingSegmentedHomeState extends State<SlidingSegmentedHome> {
             List<Article> articles = snapshot.requireData as List<Article>;
             return _buildNews(articles);
           } else {
-            return const CircularProgressIndicator();
+            return ThemeConstants.coloredCircularProgressIndicator(context);
           }
         });
   }
